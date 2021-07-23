@@ -33,7 +33,7 @@
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE",
-                "__PSP__"
+                "__PSP__"            
             ],
             "compilerPath": "C:/pspsdk/bin/psp-gcc.exe",
             "cStandard": "c11",

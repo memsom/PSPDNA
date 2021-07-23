@@ -32,14 +32,38 @@
 #include "MetaData.h"
 #include "Types.h"
 
-#define printf pspDebugScreenPrintf 
+#define printf pspDebugScreenPrintf
 
-void Crash(char *pMsg, ...) {
+void printline(char *buff, int size, int linesize)
+{
+	int hedge = size % linesize;
+	int newsize = size + hedge;
+	int pointer = 0;
+	char buffer[newsize];
+
+	for (int i = 0; i < newsize; i++)
+	{
+		if (i % linesize == 0)
+		{
+			buffer[i] = '\n';
+		}
+		else
+		{
+			buffer[i] = buff[pointer++];
+		}
+	}
+
+	printf(buffer);
+	printf("\n");
+}
+
+void Crash(char *pMsg, ...)
+{
 	va_list va;
 
 	printf("\n\n*** CRASH ***\n");
 
-    char buff[255];
+	char buff[255];
 
 	va_start(va, pMsg);
 
@@ -48,7 +72,8 @@ void Crash(char *pMsg, ...) {
 
 	va_end(va);
 
-	printf(buff);
+	int i = strlen(buff);
+	printline(buff, i, 60);
 
 	printf("\n\n");
 
@@ -64,10 +89,12 @@ void Crash(char *pMsg, ...) {
 
 U32 logLevel = 0;
 
-void log_f(U32 level, char *pMsg, ...) {
+void log_f(U32 level, char *pMsg, ...)
+{
 	va_list va;
 
-	if (logLevel >= level) {
+	if (logLevel >= level)
+	{
 		va_start(va, pMsg);
 		vprintf(pMsg, va);
 		va_end(va);
@@ -78,12 +105,15 @@ void log_f(U32 level, char *pMsg, ...) {
 }
 
 static char methodName[2048];
-char* Sys_GetMethodDesc(tMD_MethodDef *pMethod) {
+char *Sys_GetMethodDesc(tMD_MethodDef *pMethod)
+{
 	U32 i;
 
 	sprintf(methodName, "%s.%s.%s(", pMethod->pParentType->nameSpace, pMethod->pParentType->name, pMethod->name);
-	for (i=METHOD_ISSTATIC(pMethod)?0:1; i<pMethod->numberOfParameters; i++) {
-		if (i > (U32)(METHOD_ISSTATIC(pMethod)?0:1)) {
+	for (i = METHOD_ISSTATIC(pMethod) ? 0 : 1; i < pMethod->numberOfParameters; i++)
+	{
+		if (i > (U32)(METHOD_ISSTATIC(pMethod) ? 0 : 1))
+		{
 			sprintf(strchr(methodName, 0), ",");
 		}
 		sprintf(strchr(methodName, 0), pMethod->pParams[i].pTypeDef->name);
@@ -94,9 +124,10 @@ char* Sys_GetMethodDesc(tMD_MethodDef *pMethod) {
 
 static U32 mallocForeverSize = 0;
 // malloc() some memory that will never need to be resized or freed.
-void* mallocForever(U32 size) {
+void *mallocForever(U32 size)
+{
 	mallocForeverSize += size;
-log_f(3, "--- mallocForever: TotalSize %d\n", mallocForeverSize);
+	log_f(3, "--- mallocForever: TotalSize %d\n", mallocForeverSize);
 	return malloc(size);
 }
 
@@ -110,11 +141,13 @@ void* mallocTrace(int s, char *pFile, int line) {
 #endif
 */
 
-U64 msTime() {
+U64 msTime()
+{
 #ifdef _WIN32
-	static LARGE_INTEGER freq = {0,0};
+	static LARGE_INTEGER freq = {0, 0};
 	LARGE_INTEGER time;
-	if (freq.QuadPart == 0) {
+	if (freq.QuadPart == 0)
+	{
 		QueryPerformanceFrequency(&freq);
 	}
 	QueryPerformanceCounter(&time);
@@ -122,20 +155,22 @@ U64 msTime() {
 #else
 	struct timeval tp;
 	U64 ms;
-	gettimeofday(&tp,NULL);
+	gettimeofday(&tp, NULL);
 	ms = tp.tv_sec;
 	ms *= 1000;
-	ms += ((U64)tp.tv_usec)/((U64)1000);
+	ms += ((U64)tp.tv_usec) / ((U64)1000);
 	return ms;
 #endif
 }
 
 #if defined(DIAG_METHOD_CALLS) || defined(DIAG_OPCODE_TIMES) || defined(DIAG_GC) || defined(DIAG_TOTAL_TIME)
-U64 microTime() {
+U64 microTime()
+{
 #ifdef _WIN32
-	static LARGE_INTEGER freq = {0,0};
+	static LARGE_INTEGER freq = {0, 0};
 	LARGE_INTEGER time;
-	if (freq.QuadPart == 0) {
+	if (freq.QuadPart == 0)
+	{
 		QueryPerformanceFrequency(&freq);
 	}
 	QueryPerformanceCounter(&time);
@@ -143,7 +178,7 @@ U64 microTime() {
 #else
 	struct timeval tp;
 	U64 ms;
-	gettimeofday(&tp,NULL);
+	gettimeofday(&tp, NULL);
 	ms = tp.tv_sec;
 	ms *= 1000000;
 	ms += ((U64)tp.tv_usec);
@@ -152,7 +187,8 @@ U64 microTime() {
 }
 #endif
 
-void SleepMS(U32 ms) {
+void SleepMS(U32 ms)
+{
 #ifdef _WIN32
 	Sleep(ms);
 #else
