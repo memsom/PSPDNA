@@ -475,6 +475,7 @@ namespace tet
         //render a centered line of text optionally with a %d value in it
         static void Text(string str, int x, int y)
         {
+            BasicGraphics2.DrawText(str, x, y, new Color { A = 255, R = 80, G = 90, B = 85 });
             //Console.WriteLine(str);
             //if (!font) return;
             //int w, h;

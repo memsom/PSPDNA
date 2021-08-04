@@ -1,3 +1,4 @@
+#define __PSP__
 #include "controls.h"
 #include "callback.h"
 #include "Compat.h"
@@ -6,6 +7,7 @@
 #include "MetaData.h"
 #include "Types.h"
 #include "Type.h"
+#include "System.String.h"
 
 #include "Psp.BasicGraphics.h"
 #include <pspdebug.h>
@@ -15,17 +17,20 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer;
+TTF_Font *defaultFont = NULL; // for now we just use the default font
 
 tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
         SDL_Log("SDL_Init: %s\n", SDL_GetError());
         return -1;
     }
 
-     // create an SDL window (pspgl enabled)
+    // create an SDL window (pspgl enabled)
     window = SDL_CreateWindow("sdl2_psp", 0, 0, 480, 272, 0);
-    if (!window) {
+    if (!window)
+    {
         SDL_Log("SDL_CreateWindow: %s\n", SDL_GetError());
         SDL_Quit();
         return -1;
@@ -33,10 +38,16 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
 
     // create a renderer (OpenGL ES2)
     renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
+    if (!renderer)
+    {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
         SDL_Quit();
         return -1;
+    }
+
+    if (TTF_Init() == 0)
+    {
+        defaultFont = TTF_OpenFont("Fonts/arial.ttf", 12);
     }
 
     return NULL;
@@ -80,5 +91,49 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawRect2(PTR pThis_, PTR pParams, PTR pRetu
     SDL_Rect rect = {x, y, w, h};
     SDL_RenderFillRect(renderer, &rect);
 
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // only call this if we loaded the font correctly
+    if (defaultFont)
+    {
+        // get the data from the params...
+        HEAP_PTR pStr = ((HEAP_PTR *)pParams)[0];
+        int x = ((int *)pParams)[1];
+        int y = ((int *)pParams)[2];
+        U32 color = ((int *)pParams)[3];
+
+        // we need to convert the System.String to a char*
+        STRING2 str;
+        U32 i, strLen;
+        str = SystemString_GetString(pStr, &strLen);
+        char str8[strLen + 1];
+        U32 start = 0;
+        for (i = 0; i < strLen; i++)
+        {
+            unsigned char c = str[start + i] & 0xff;
+            str8[i] = c ? c : '?';
+        }
+        str8[i] = 0;
+
+        // decode the colour
+        int a = (u8)(color >> 24);
+        int r = (u8)(color >> 16);
+        int g = (u8)(color >> 8);
+        int b = (u8)(color >> 0);
+
+        // this code is basically the same as the Tet demo originally used.
+        int w, h;
+        TTF_SizeText(defaultFont, str8, &w, &h);
+        SDL_Surface *msgsurf = TTF_RenderText_Blended(defaultFont, str8, (SDL_Color){r, g, b, a});
+        SDL_Texture *msgtex = SDL_CreateTextureFromSurface(renderer, msgsurf);
+        SDL_Rect fromrec = {0, 0, msgsurf->w, msgsurf->h};
+        SDL_Rect torec = {x, y, msgsurf->w, msgsurf->h};
+        SDL_RenderCopy(renderer, msgtex, &fromrec, &torec);
+        SDL_DestroyTexture(msgtex);
+        SDL_FreeSurface(msgsurf);
+    }
     return NULL;
 }

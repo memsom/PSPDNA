@@ -11,8 +11,6 @@ OBJS = dna.o callback.o	CLIFile.o Delegate.o Finalizer.o Generics.o Heap.o Inter
 	   System.Console.o diet-glob.o diet-fnmatch.o controls.o Psp.Debug.o Psp.Controls.o \
 	   Psp.Display.o Psp.Kernel.o graph.o Psp.BasicGraphics.o Psp.BasicGraphics2.o
 
-# Pinvoke.o 
-
 # #CFLAGS= -O0 -g -I. -Wall -Werror 
 # #-mips2 -mcpu=r3900
 # #CFLAGS= -Os -g -I. -Wall -Werror -mips2 -mcpu=r3900
@@ -37,7 +35,7 @@ PSP_EBOOT_ICON = ICON0.PNG
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 
-LIBS += -lSDL2 -lGL -lGLU -lglut -lz -lpspvfpu -lpsphprm -lpspsdk -lpspctrl -lpspumd -lpsprtc \
+LIBS += -lSDL2 -lSDL2_ttf -lfreetype -lGL -lGLU -lglut -lz -lpspvfpu -lpsphprm -lpspsdk -lpspctrl -lpspumd -lpsprtc \
        -lpsppower -lpspgum -lpspgu -lpspaudiolib -lpspaudio -lpsphttp -lpspssl -lpspwlan \
 	   -lpspnet_adhocmatching -lpspnet_adhoc -lpspnet_adhocctl -lm -lpspvram
 

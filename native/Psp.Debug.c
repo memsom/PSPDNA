@@ -8,6 +8,7 @@
 #include "Type.h"
 
 #include <pspdebug.h>
+#include <pspiofilemgr.h>
 
 // this is basically the same as System_Console_Write(..)
 tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnValue)
@@ -30,6 +31,8 @@ tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnVal
 	str8[i] = 0;
 
 	pspDebugScreenPrintf(str8);
+	sceIoWrite(2, str8, thisLen);
+	sceIoWrite(2, "\n", 1);
 
 	return NULL;
 }

@@ -30,5 +30,13 @@ namespace Psp
         {
             DrawRect(rect.X, rect.Y, rect.Width, rect.Height, color);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static void NativeDrawText(string text, int x, int y, uint color);
+
+        public static void DrawText(string text, int x, int y, Color color)
+        {
+            NativeDrawText(text, x, y, color.ToNative());
+        }
     }
 }
