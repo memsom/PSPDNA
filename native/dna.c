@@ -55,24 +55,26 @@ static void ShowUsage() {
 	exit(1);
 }
 
-int main(int argc, char *argv[])
+int run(char* name)
 {
-
-
 	// because DNA is command line, we need to inject the 
 	// path to the app.dll...
 	char *args[2];
-	char app[] = "app.exe\0";
 	args[0] = NULL;
-	args[1] = &app;
+	args[1] = name;
 
+	return dna_main(2, &args);
+}
+
+int main(int argc, char *argv[])
+{
     pspDebugScreenInit();
     setupExitCallback();
 
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-	int result = dna_main(2, &args);
+	int result = run("tet.exe");
 
     // this basically puts the console in to a wait loop
     printf("** Process complete [Square exits] **");

@@ -173,7 +173,7 @@ namespace tet
                 }
             }
 
-            if (idle_time >= 5)
+            if (idle_time >= 50)
             {
                 Move(0, 1);
             }
@@ -185,7 +185,7 @@ namespace tet
             //memset(board, 0, sizeof board);
             //board = new byte[BHEIGHT * BWIDTH];
             board = new List<byte[]>();
-            for (int i = 0; i < BHEIGHT; i ++)
+            for (int i = 0; i < BHEIGHT; i++)
             {
                 board.Add(new byte[BWIDTH]);
             }
@@ -444,14 +444,15 @@ namespace tet
             }
 
             //draw counters and instructions
-            Text("Lines:", 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 0);
-            Text(lines.ToString(), 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 30);
-            Text("Score:", 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 70);
-            Text(score.ToString(), 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 100);
-            Text("Best:", 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 140);
-            Text(best.ToString(), 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 170);
-            Text("Controls:", 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 370);
-            Text("arrows, z, x", 10 + BS * BWIDTH + 10, 10 + BS * 5 + 10 + 400);
+            // we re do this as the original layout doe not work for us on the PSP screen
+            int tx = 10 + BS * BWIDTH + 10;
+            int ty = 10 + BS * 5 + 10;
+            Text("Lines:", tx, ty);
+            Text(lines.ToString(), tx, ty + 15);
+            Text("Score:", tx, ty + 30);
+            Text(score.ToString(), tx, ty + 45);
+            Text("Best:", tx, ty + 60);
+            Text(best.ToString(), tx, ty + 75);
         }
 
         //draw a single square/piece of a shape
@@ -475,20 +476,17 @@ namespace tet
         //render a centered line of text optionally with a %d value in it
         static void Text(string str, int x, int y)
         {
-            BasicGraphics2.DrawText(str, x, y, new Color { A = 255, R = 80, G = 90, B = 85 });
-            //Console.WriteLine(str);
-            //if (!font) return;
-            //int w, h;
-            //char msg[80];
-            //snprintf(msg, 80, fstr, value);
-            //TTF_SizeText(font, msg, &w, &h);
-            //SDL_Surface* msgsurf = TTF_RenderText_Blended(font, msg, (SDL_Color){ 80, 90, 85});
-            //SDL_Texture* msgtex = SDL_CreateTextureFromSurface(renderer, msgsurf);
-            //SDL_Rect fromrec = { 0, 0, msgsurf->w, msgsurf->h };
-            //SDL_Rect torec = { x, y, msgsurf->w, msgsurf->h };
-            //SDL_RenderCopy(renderer, msgtex, &fromrec, &torec);
-            //SDL_DestroyTexture(msgtex);
-            //SDL_FreeSurface(msgsurf);
+            BasicGraphics2.DrawText(
+                str,
+                x,
+                y,
+                new Color
+                {
+                    A = 255,
+                    R = 80,
+                    G = 90,
+                    B = 85
+                });
         }
     }
 }
