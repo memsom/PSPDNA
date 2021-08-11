@@ -24,6 +24,7 @@
 #include <pspctrl.h>
 #include "callback.h"
 #include "controls.h"
+#include "Psp.Controls.h"
 
 #define VERS 1
 #define REVS 0
@@ -67,6 +68,9 @@ int run(char *name)
 	return dna_main(2, &args);
 }
 
+extern char* pAppName;
+const char APP_MENU[] = "appmenu.exe";
+
 int main(int argc, char *argv[])
 {
 	pspDebugScreenInit();
@@ -75,8 +79,9 @@ int main(int argc, char *argv[])
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-	int result = run("simple.exe");
-	result = run("tet.exe");
+	int result = run(APP_MENU);
+
+	result = run(pAppName);
 
 	// this basically puts the console in to a wait loop
 	printf("** Process complete [Square exits] **");

@@ -202,6 +202,7 @@ static tInternalCall internalCalls[] = {
 	{NULL,       NULL, "NativeIsKeyUp",         Psp_Controls_nativeIsKeyUp, TYPE_SYSTEM_INT32, 1, {TYPE_SYSTEM_INT32}},
     {NULL,       NULL, "NativeIsKeyDown",       Psp_Controls_nativeIsKeyDown, TYPE_SYSTEM_INT32, 1, {TYPE_SYSTEM_INT32}},
     {NULL,    "State", "NativeIsRunning",       Psp_State_nativeIsRunning, TYPE_SYSTEM_INT32, 0},
+	{NULL,       NULL, "SetAppName",            Psp_State_setAppName, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_STRING}},
 	{NULL,   "Kernel", "ExitGame",              Psp_Kernel_nativeExitGame, TYPE_SYSTEM_VOID, 0},
     {NULL,  "Display", "WaitVblankStart",       Psp_Display_nativeWaitVblankStart, TYPE_SYSTEM_INT32, 0},
 
