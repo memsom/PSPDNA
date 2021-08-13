@@ -2,6 +2,8 @@
 
 namespace testSimple
 {
+    // If you are using the app menu, you really can't mix
+    // graphics libs... you must use BasicGraphics2...
     class Program
     {
         static void Main()
@@ -9,18 +11,18 @@ namespace testSimple
             int x = 0;
             int y = 0;
 
-            BasicGraphics.Init();
+            BasicGraphics2.Init();
 
             Color fore = Color.FromRGBA(0x82, 0xca,  0xff ); 
             Color back = Color.FromRGBA(0xff, 0xff, 0);
 
             while (State.IsRunning())
             {
-                BasicGraphics.Clear(back);
+                BasicGraphics2.Clear(back);
 
-                BasicGraphics.DrawRect(x, y, 10, 10, fore);
+                BasicGraphics2.DrawRect(x, y, 10, 10, fore);
 
-                BasicGraphics.SwapBuffers();
+                BasicGraphics2.SwapBuffers();
 
                 Controls.PollLatch();
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Psp;
 
+// If you are using the app menu, you really can't mix
+// graphics libs... you must use BasicGraphics2...
 namespace tet
 {
     // This is a fairly rough translation of 

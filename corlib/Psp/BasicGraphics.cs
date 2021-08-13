@@ -2,6 +2,8 @@
 
 namespace Psp
 {
+    // If you are using the app menu, you really can't mix
+    // graphics libs... you must use BasicGraphics2...
     public static class BasicGraphics
     {
         [MethodImpl(MethodImplOptions.InternalCall)]

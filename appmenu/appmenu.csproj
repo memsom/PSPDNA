@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net40</TargetFramework>
     <NoStdLib>true</NoStdLib>
+    <AssemblyName>Dna.AppMenu</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\native</OutputPath>

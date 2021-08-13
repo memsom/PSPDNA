@@ -68,8 +68,9 @@ int run(char *name)
 	return dna_main(2, &args);
 }
 
-extern char* pAppName;
-const char APP_MENU[] = "appmenu.exe";
+extern char *pAppName;
+const char APP_MENU[] = "Dna.AppMenu.exe";
+const char APP_LEGACY[] = "app.exe";
 
 int main(int argc, char *argv[])
 {
@@ -79,23 +80,57 @@ int main(int argc, char *argv[])
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-	int result = run(APP_MENU);
+	int result = 0;
 
-	result = run(pAppName);
+	int shouldJustExit = 0;
 
-	// this basically puts the console in to a wait loop
-	printf("** Process complete [Square exits] **");
-
-	// catch the game end and spin so thatthe app doesn't just close.
-	while (isRunning())
+	// we look for an "app menu" exe....
+	// if there is not one we fall back to
+	// loading "app.exe".... which allows
+	// the runtime to me used for custom
+	// apps...
+	if (access(APP_MENU, F_OK) == 0)
 	{
-		sceDisplayWaitVblankStart();
+		result = run(APP_MENU);
 
-		pollLatch();
-
-		if (isKeyDown(PSP_CTRL_SQUARE))
+		// the app menu will set pAppName to something
+		if (pAppName != NULL && strlen(pAppName) > 0)
 		{
-			break;
+			// if the name is "valid", we try to run the app...
+			result = run(pAppName);
+
+			if(result == 0)
+			{
+				shouldJustExit = 1;
+			}
+		}
+		else
+		{
+			shouldJustExit = 1;
+		}
+	}
+	else
+	{
+		result = run(APP_LEGACY);
+	}
+
+	if (shouldJustExit != 1)
+	{
+
+		// this basically puts the console in to a wait loop
+		printf("** Process complete [Square exits] **");
+
+		// catch the game end and spin so thatthe app doesn't just close.
+		while (isRunning())
+		{
+			sceDisplayWaitVblankStart();
+
+			pollLatch();
+
+			if (isKeyDown(PSP_CTRL_SQUARE))
+			{
+				break;
+			}
 		}
 	}
 
