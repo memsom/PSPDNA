@@ -79,7 +79,7 @@ void Crash(char *pMsg, ...)
 
 #ifdef _WIN32
 	{
-		// Cause a delibrate exception, to get into debugger
+		// Cause a deliberate exception, to get into debugger
 		__debugbreak();
 	}
 #endif

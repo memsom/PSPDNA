@@ -14,5 +14,6 @@ tAsyncCall* Psp_Controls_nativeIsKeyDown(PTR pThis_, PTR pParams, PTR pReturnVal
 tAsyncCall* Psp_Controls_nativeIsKeyUp(PTR pThis_, PTR pParams, PTR pReturnValue);
 
 tAsyncCall* Psp_State_nativeIsRunning(PTR pThis_, PTR pParams, PTR pReturnValue);
+tAsyncCall* Psp_State_setAppName(PTR pThis_, PTR pParams, PTR pReturnValue);
 
 #endif

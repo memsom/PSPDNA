@@ -24,6 +24,7 @@
 #include <pspctrl.h>
 #include "callback.h"
 #include "controls.h"
+#include "Psp.Controls.h"
 
 #define VERS 1
 #define REVS 0
@@ -43,9 +44,10 @@ PSP_HEAP_SIZE_MAX();
 #include "System.Net.Sockets.Socket.h"
 #include "MethodState.h"
 
-#define printf pspDebugScreenPrintf 
+#define printf pspDebugScreenPrintf
 
-static void ShowUsage() {
+static void ShowUsage()
+{
 	printf("Usage:\n");
 	printf("\tdna [-v] <.Net executable to execute> [.Net executable arguments]\n");
 	printf("\n");
@@ -55,38 +57,80 @@ static void ShowUsage() {
 	exit(1);
 }
 
-int main(int argc, char *argv[])
+int run(char *name)
 {
-
-
-	// because DNA is command line, we need to inject the 
+	// because DNA is command line, we need to inject the
 	// path to the app.dll...
 	char *args[2];
-	char app[] = "app.exe\0";
 	args[0] = NULL;
-	args[1] = &app;
+	args[1] = name;
 
-    pspDebugScreenInit();
-    setupExitCallback();
+	return dna_main(2, &args);
+}
+
+extern char *pAppName;
+const char APP_MENU[] = "Dna.AppMenu.exe";
+const char APP_LEGACY[] = "app.exe";
+
+int main(int argc, char *argv[])
+{
+	pspDebugScreenInit();
+	setupExitCallback();
 
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-	int result = dna_main(2, &args);
+	int result = 0;
 
-    // this basically puts the console in to a wait loop
-    printf("** Process complete [Square exits] **");
+	int shouldJustExit = 0;
 
-    // catch the game end and spin so thatthe app doesn't just close.
-	while(isRunning())
-    {
-		sceDisplayWaitVblankStart();
+	// we look for an "app menu" exe....
+	// if there is not one we fall back to
+	// loading "app.exe".... which allows
+	// the runtime to me used for custom
+	// apps...
+	if (access(APP_MENU, F_OK) == 0)
+	{
+		result = run(APP_MENU);
 
-        pollLatch();
-
-        if(isKeyDown(PSP_CTRL_SQUARE))
+		// the app menu will set pAppName to something
+		if (pAppName != NULL && strlen(pAppName) > 0)
 		{
-			break;
+			// if the name is "valid", we try to run the app...
+			result = run(pAppName);
+
+			if(result == 0)
+			{
+				shouldJustExit = 1;
+			}
+		}
+		else
+		{
+			shouldJustExit = 1;
+		}
+	}
+	else
+	{
+		result = run(APP_LEGACY);
+	}
+
+	if (shouldJustExit != 1)
+	{
+
+		// this basically puts the console in to a wait loop
+		printf("** Process complete [Square exits] **");
+
+		// catch the game end and spin so thatthe app doesn't just close.
+		while (isRunning())
+		{
+			sceDisplayWaitVblankStart();
+
+			pollLatch();
+
+			if (isKeyDown(PSP_CTRL_SQUARE))
+			{
+				break;
+			}
 		}
 	}
 
@@ -95,7 +139,10 @@ int main(int argc, char *argv[])
 	return result;
 }
 
-int dna_main(int argc, char **argp) {
+static uint8_t wasInitialised = 0;
+
+int dna_main(int argc, char **argp)
+{
 	tCLIFile *pCLIFile;
 	char *pFileName;
 	U32 i;
@@ -103,7 +150,8 @@ int dna_main(int argc, char **argp) {
 #ifdef DIAG_TOTAL_TIME
 	U64 startTime;
 #endif
-	if (argc < 2) {
+	if (argc < 2)
+	{
 		ShowUsage();
 	}
 
@@ -111,33 +159,43 @@ int dna_main(int argc, char **argp) {
 	//while (1)	;
 
 	// Read any flags passed in
-	for (i=1; i < (U32)argc; i++) {
-		if (argp[i][0] == '-') {
+	for (i = 1; i < (U32)argc; i++)
+	{
+		if (argp[i][0] == '-')
+		{
 			U32 j;
 
-			for (j=1; ; j++) {
-				switch (argp[i][j]) {
-					case 0:
-						goto doneArgs;
-					case 'v':
-						logLevel++;
-						break;
-					default:
-						Crash("Invalid argument: -%c", argp[i][1]);
+			for (j = 1;; j++)
+			{
+				switch (argp[i][j])
+				{
+				case 0:
+					goto doneArgs;
+				case 'v':
+					logLevel++;
+					break;
+				default:
+					Crash("Invalid argument: -%c", argp[i][1]);
 				}
 			}
-doneArgs:;
-		} else {
+		doneArgs:;
+		}
+		else
+		{
 			break;
 		}
 	}
 
-	JIT_Execute_Init();
-	MetaData_Init();
-	Type_Init();
-	Heap_Init();
-	Finalizer_Init();
-	Socket_Init();
+	if (!wasInitialised)
+	{
+		JIT_Execute_Init();
+		MetaData_Init();
+		Type_Init();
+		Heap_Init();
+		Finalizer_Init();
+		Socket_Init();
+		wasInitialised = 1;
+	}
 
 #ifdef DIAG_OPCODE_TIMES
 #ifdef _WIN32
@@ -161,9 +219,12 @@ doneArgs:;
 	startTime = microTime();
 #endif
 
-	if (pCLIFile->entryPoint) {
+	if (pCLIFile->entryPoint)
+	{
 		retValue = CLIFile_Execute(pCLIFile, argc - i, argp + i);
-	} else {
+	}
+	else
+	{
 		printf("File %s has no entry point, skipping execution\n", pFileName);
 		retValue = 0;
 	}
@@ -185,18 +246,21 @@ doneArgs:;
 		pCorLib = CLIFile_GetMetaDataForAssembly("mscorlib");
 		numMethods = pCorLib->tables.numRows[MD_TABLE_METHODDEF];
 		printf("\nCorLib method usage:\n");
-		for (; howMany > 0; howMany--) {
+		for (; howMany > 0; howMany--)
+		{
 			tMD_MethodDef *pMethod;
 			U32 maxCount = 0, maxIndex = 0;
-			for (i=1; i<=numMethods; i++) {
-				pMethod = (tMD_MethodDef*)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, i));
-				if (pMethod->callCount > maxCount) {
+			for (i = 1; i <= numMethods; i++)
+			{
+				pMethod = (tMD_MethodDef *)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, i));
+				if (pMethod->callCount > maxCount)
+				{
 					maxCount = pMethod->callCount;
 					maxIndex = i;
 				}
 			}
-			pMethod = (tMD_MethodDef*)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, maxIndex));
-			printf("%d: %s (%d)\n", (int)pMethod->callCount, Sys_GetMethodDesc(pMethod), (int)(pMethod->totalTime/1000));
+			pMethod = (tMD_MethodDef *)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, maxIndex));
+			printf("%d: %s (%d)\n", (int)pMethod->callCount, Sys_GetMethodDesc(pMethod), (int)(pMethod->totalTime / 1000));
 			pMethod->callCount = 0;
 		}
 		printf("\n");
@@ -209,19 +273,22 @@ doneArgs:;
 		pCorLib = CLIFile_GetMetaDataForAssembly("mscorlib");
 		numMethods = pCorLib->tables.numRows[MD_TABLE_METHODDEF];
 		printf("\nCorLib method execution time:\n");
-		for (; howMany > 0; howMany--) {
+		for (; howMany > 0; howMany--)
+		{
 			tMD_MethodDef *pMethod;
 			U64 maxTime = 0;
 			U32 maxIndex = 0;
-			for (i=1; i<=numMethods; i++) {
-				pMethod = (tMD_MethodDef*)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, i));
-				if (pMethod->totalTime > maxTime) {
+			for (i = 1; i <= numMethods; i++)
+			{
+				pMethod = (tMD_MethodDef *)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, i));
+				if (pMethod->totalTime > maxTime)
+				{
 					maxTime = pMethod->totalTime;
 					maxIndex = i;
 				}
 			}
-			pMethod = (tMD_MethodDef*)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, maxIndex));
-			printf("%d: %s (%d)\n", (int)pMethod->callCount, Sys_GetMethodDesc(pMethod), (int)(pMethod->totalTime/1000));
+			pMethod = (tMD_MethodDef *)MetaData_GetTableRow(pCorLib, MAKE_TABLE_INDEX(MD_TABLE_METHODDEF, maxIndex));
+			printf("%d: %s (%d)\n", (int)pMethod->callCount, Sys_GetMethodDesc(pMethod), (int)(pMethod->totalTime / 1000));
 			pMethod->totalTime = 0;
 		}
 		printf("\n");
@@ -232,17 +299,20 @@ doneArgs:;
 		I32 howMany = 25;
 		U32 i;
 		printf("\nOpCodes execution time:\n");
-		for (; howMany > 0; howMany--) {
+		for (; howMany > 0; howMany--)
+		{
 			U64 maxTime = 0;
 			U32 maxIndex = 0;
-			for (i=0; i<JIT_OPCODE_MAXNUM; i++) {
-				if (opcodeTimes[i] > maxTime) {
+			for (i = 0; i < JIT_OPCODE_MAXNUM; i++)
+			{
+				if (opcodeTimes[i] > maxTime)
+				{
 					maxTime = opcodeTimes[i];
 					maxIndex = i;
 				}
 			}
 			printf("0x%03x: %dms (used %d times) (ave = %d)\n",
-				maxIndex, (int)(maxTime / 1000), (int)opcodeNumUses[maxIndex], (int)(maxTime / opcodeNumUses[maxIndex]));
+				   maxIndex, (int)(maxTime / 1000), (int)opcodeNumUses[maxIndex], (int)(maxTime / opcodeNumUses[maxIndex]));
 			opcodeTimes[maxIndex] = 0;
 		}
 	}
@@ -252,11 +322,14 @@ doneArgs:;
 		I32 howMany = 25;
 		U32 i, j;
 		printf("\nOpcode use:\n");
-		for (j=1; howMany>0; howMany--, j++) {
+		for (j = 1; howMany > 0; howMany--, j++)
+		{
 			U32 maxUse = 0;
 			U32 maxIndex = 0;
-			for (i=0; i<JIT_OPCODE_MAXNUM; i++) {
-				if (opcodeNumUses[i] > maxUse) {
+			for (i = 0; i < JIT_OPCODE_MAXNUM; i++)
+			{
+				if (opcodeNumUses[i] > maxUse)
+				{
 					maxUse = opcodeNumUses[i];
 					maxIndex = i;
 				}

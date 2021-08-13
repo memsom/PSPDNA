@@ -7,6 +7,7 @@
         public byte B;
         public byte A;
 
+        // this uses the PSP colour encoding
         public uint ToNative()
         {
             return (uint)(((A << 24) | (R << 16) | (G << 8) | B));
