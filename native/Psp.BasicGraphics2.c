@@ -137,3 +137,70 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pRetu
     }
     return NULL;
 }
+
+tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    HEAP_PTR pStr = ((HEAP_PTR *)pParams)[0];
+
+    // we need to convert the System.String to a char*
+    STRING2 str;
+    U32 i, strLen;
+    str = SystemString_GetString(pStr, &strLen);
+    char str8[strLen + 1];
+    U32 start = 0;
+    for (i = 0; i < strLen; i++)
+    {
+        unsigned char c = str[start + i] & 0xff;
+        str8[i] = c ? c : '?';
+    }
+    str8[i] = 0;
+
+    // we can nor load the value
+    SDL_Surface *surface = SDL_LoadBMP(str8);
+
+    pReturnValue = (PTR)surface;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    SDL_Surface *pSurface = (SDL_Surface *)pParams[0];
+
+    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+
+    pReturnValue = (PTR)pTexture;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    SDL_Surface *pSurface = (SDL_Surface *)pParams[0];
+    int flag = ((int *)pParams)[1];
+    U32 key = ((U32 *)pParams)[2];
+
+    int result = SDL_SetColorKey(pSurface, flag, key);
+
+    pReturnValue = (PTR)result;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    SDL_Texture *pTexture = (SDL_Texture *)pParams[0];
+    int x = ((int *)pParams)[1];
+    int y = ((int *)pParams)[2];
+    int w = ((int *)pParams)[3];
+    int h = ((int *)pParams)[4];
+
+    int result = SDL_RenderCopy(renderer, &pTexture, NULL,&(SDL_Rect){x, y, w, h});
+
+    pReturnValue = (PTR)result;
+
+    return NULL;
+}

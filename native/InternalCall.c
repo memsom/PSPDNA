@@ -215,7 +215,11 @@ static tInternalCall internalCalls[] = {
     {NULL,             NULL, "NativeClear",     Psp_BasicGraphics_nativeClear2, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_UINT32}},
     {NULL,             NULL, "SwapBuffers",     Psp_BasicGraphics_nativeSwapBuffers2, TYPE_SYSTEM_VOID, 0},
     {NULL,             NULL, "NativeDrawRect",  Psp_BasicGraphics_nativeDrawRect2, TYPE_SYSTEM_VOID, 5, {TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_UINT32}},
-	{NULL,             NULL, "NativeDrawText",  		Psp_BasicGraphics_nativeDrawText2, TYPE_SYSTEM_VOID, 4, {TYPE_SYSTEM_STRING, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_UINT32}},
+	{NULL,             NULL, "NativeDrawText",  Psp_BasicGraphics_nativeDrawText2, TYPE_SYSTEM_VOID, 4, {TYPE_SYSTEM_STRING, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_UINT32}},
+	{NULL,             NULL, "NativeLoadSurface",  Psp_BasicGraphics_nativeLoadSurface2, TYPE_SYSTEM_INTPTR, 1, {TYPE_SYSTEM_STRING}},
+	{NULL,             NULL, "NativeCreateTexture",  Psp_BasicGraphics_nativeCreateTexture2, TYPE_SYSTEM_INTPTR, 1, {TYPE_SYSTEM_INTPTR}},
+    {NULL,             NULL, "NativeSetColorKey",  Psp_BasicGraphics_nativeSetColorKey2, TYPE_SYSTEM_INT32, 3, {TYPE_SYSTEM_INTPTR,TYPE_SYSTEM_INT32,TYPE_SYSTEM_INT32}},	
+	{NULL,             NULL, "NativeDrawTexture",  Psp_BasicGraphics_nativeDrawTexture2, TYPE_SYSTEM_INT32, 5, {TYPE_SYSTEM_INTPTR,TYPE_SYSTEM_INT32,TYPE_SYSTEM_INT32,TYPE_SYSTEM_INT32,TYPE_SYSTEM_INT32}},
 
 	{NULL, NULL, NULL, NULL}
 };
