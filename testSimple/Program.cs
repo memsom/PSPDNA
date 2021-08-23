@@ -14,13 +14,23 @@ namespace testSimple
             BasicGraphics2.Init();
 
             Color fore = Color.FromRGBA(0x82, 0xca,  0xff ); 
-            Color back = Color.FromRGBA(0xff, 0xff, 0);
+            Color back = Color.FromRGBA(0xff, 0, 0xff);
+
+            var surface = BasicGraphics2.CreateSurface("res/test.bmp");
+
+            var texture = BasicGraphics2.CreateTexture(surface);
 
             while (State.IsRunning())
             {
                 BasicGraphics2.Clear(back);
 
                 BasicGraphics2.DrawRect(x, y, 10, 10, fore);
+
+                BasicGraphics2.DrawTexture(texture, 50, 50, 150, 150);
+
+                BasicGraphics2.DrawText($"{surface.Handle.ToInt32()}", 10, 10, fore);
+                BasicGraphics2.DrawText($"{texture.Handle.ToInt32()}", 10, 20, fore);
+                BasicGraphics2.DrawText($"{System.IntPtr.Zero.ToInt32()}", 10, 30, fore);
 
                 BasicGraphics2.SwapBuffers();
 

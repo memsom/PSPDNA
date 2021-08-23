@@ -138,6 +138,8 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pRetu
     return NULL;
 }
 
+static SDL_Surface *last;
+
 tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
     // read the param - this will be a path
@@ -145,6 +147,7 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
 
     // we need to convert the System.String to a char*
     STRING2 str;
+
     U32 i, strLen;
     str = SystemString_GetString(pStr, &strLen);
     char str8[strLen + 1];
@@ -159,7 +162,9 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
     // we can nor load the value
     SDL_Surface *surface = SDL_LoadBMP(str8);
 
-    pReturnValue = (PTR)surface;
+    last = surface;
+
+    pReturnValue = surface;
 
     return NULL;
 }
@@ -168,6 +173,8 @@ tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR 
 {
     // read the param - this will be a path
     SDL_Surface *pSurface = (SDL_Surface *)pParams[0];
+
+    Crash("%i\n%i", last, pSurface);
 
     SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
 

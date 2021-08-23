@@ -40,5 +40,57 @@ namespace Psp
         {
             NativeDrawText(text, x, y, color.ToNative());
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static System.IntPtr NativeLoadSurface(string fileName);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static System.IntPtr NativeCreateTexture(System.IntPtr surface);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static int NativeDrawTexture(System.IntPtr texture, int x, int y, int w, int h);
+  
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static int NativeSetColorKey(System.IntPtr surface, int flag, uint key);
+
+        public static Surface CreateSurface(string bitmap, bool useKey = false, Color key = default)
+        {
+            var surface = NativeLoadSurface(bitmap);
+            if (useKey)
+            {
+                NativeSetColorKey(surface, useKey ? 1: 0, key.ToNative());
+            }
+
+            return new Surface { Handle = surface };
+        }
+
+        public static Texture CreateTexture(Surface surface)
+        {
+            var handle = surface.Handle;
+            return new Texture
+            {
+                Surface = surface,
+                Handle = NativeCreateTexture(handle)
+            };
+        }
+
+        public static int DrawTexture(Texture texture, int x, int y, int w, int h)
+        {
+            var handle = texture.Handle;
+            return NativeDrawTexture(handle, x, y, w, h);
+        }
+    }
+
+    // this is a first pass... this will probably change
+    public class Surface
+    {
+        public System.IntPtr Handle { get; internal set; } = System.IntPtr.Zero;
+    }
+
+    // this is a first pass... this will probably change
+    public class Texture
+    {
+        public Surface Surface { get; internal set; }
+        public System.IntPtr Handle { get; internal set; } = System.IntPtr.Zero;
     }
 }
