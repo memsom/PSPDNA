@@ -164,7 +164,7 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
 
     last = surface;
 
-    pReturnValue = surface;
+    *(HEAP_PTR *)pReturnValue = (HEAP_PTR)surface;
 
     return NULL;
 }
@@ -172,13 +172,11 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
 tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
     // read the param - this will be a path
-    SDL_Surface *pSurface = (SDL_Surface *)pParams[0];
-
-    Crash("%i\n%i", last, pSurface);
+    HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
 
     SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
 
-    pReturnValue = (PTR)pTexture;
+    *(HEAP_PTR *)pReturnValue = (HEAP_PTR)pTexture;
 
     return NULL;
 }
@@ -186,28 +184,28 @@ tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR 
 tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
     // read the param - this will be a path
-    SDL_Surface *pSurface = (SDL_Surface *)pParams[0];
+    HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
     int flag = ((int *)pParams)[1];
     U32 key = ((U32 *)pParams)[2];
 
     int result = SDL_SetColorKey(pSurface, flag, key);
 
-    pReturnValue = (PTR)result;
+    *(int *)pReturnValue = (int *)result;
 
     return NULL;
 }
 
 tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
-    SDL_Texture *pTexture = (SDL_Texture *)pParams[0];
+    HEAP_PTR pTexture = ((HEAP_PTR *)pParams)[0];
     int x = ((int *)pParams)[1];
     int y = ((int *)pParams)[2];
     int w = ((int *)pParams)[3];
     int h = ((int *)pParams)[4];
 
-    int result = SDL_RenderCopy(renderer, &pTexture, NULL,&(SDL_Rect){x, y, w, h});
+    int result = SDL_RenderCopy(renderer, pTexture, NULL,&(SDL_Rect){x, y, w, h});
 
-    pReturnValue = (PTR)result;
+    *(int *)pReturnValue = (int *)result;
 
     return NULL;
 }
