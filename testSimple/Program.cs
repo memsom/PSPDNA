@@ -15,8 +15,9 @@ namespace testSimple
 
             Color fore = Color.FromRGBA(0x82, 0xca,  0xff ); 
             Color back = Color.FromRGBA(0xff, 0, 0xff);
+            Color mask = Color.FromRGBA(0xff, 0xff, 0xff);
 
-            var surface = BasicGraphics2.CreateSurface("res/test.bmp");
+            var surface = BasicGraphics2.CreateSurface("res/test.bmp", true, mask);
 
             var texture = BasicGraphics2.CreateTexture(surface);
 
@@ -24,9 +25,9 @@ namespace testSimple
             {
                 BasicGraphics2.Clear(back);
 
-                BasicGraphics2.DrawRect(x, y, 10, 10, fore);
-
                 BasicGraphics2.DrawTexture(texture, 50, 50, 150, 150);
+
+                BasicGraphics2.DrawRect(x, y, 10, 10, fore);
 
                 BasicGraphics2.DrawText($"{surface.Handle.ToInt32()}", 10, 10, fore);
                 BasicGraphics2.DrawText($"{texture.Handle.ToInt32()}", 10, 20, fore);
