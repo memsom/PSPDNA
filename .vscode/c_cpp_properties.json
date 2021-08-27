@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "psp-mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/local/pspdev/psp/include",
+                "/usr/local/pspdev/psp/sdk/include",
+                "/usr/local/pspdev/x86_64-apple-darwin19.6.0/psp/include",
+                "/usr/local/pspdev/lib/gcc/psp/9.3.0/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__PSP__"
+            ],
+            "compilerPath": "/usr/local/pspdev/bin/psp-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-x64"
+        },
+        {
+            "name": "psp-win10",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/pspsdk/psp/include",
+                "C:/pspsdk/psp/sdk/include",
+                "C:/pspsdk/i686-pc-mingw32/psp/include",
+                "C:/pspsdk/lib/gcc/psp/8.2.0/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__PSP__"            
+            ],
+            "compilerPath": "C:/pspsdk/bin/psp-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

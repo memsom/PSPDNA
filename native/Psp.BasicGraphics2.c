@@ -37,7 +37,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     }
 
     // create a renderer (OpenGL ES2)
-    renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer)
     {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
@@ -175,6 +175,8 @@ tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR 
     HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
 
     SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+
+    //Crash("%i\n%i", pSurface, pTexture);
 
     *(HEAP_PTR *)pReturnValue = (HEAP_PTR)pTexture;
 
