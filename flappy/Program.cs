@@ -8,7 +8,7 @@ namespace Flappy
     {
         const int W = 480;
         const int H = 272;
-        const int GROUND = 80;
+        const int GROUND = 40;
         const int PIPE_W = 86;
         const int PHYS_W = (W + PIPE_W + 80);
         const int GAP = 220;
@@ -17,8 +17,8 @@ namespace Flappy
         static System.Random r;
         static int rand() => r.Next();
         static int RANDOM_PIPE_HEIGHT => (rand() % (H - GROUND - GAP - 120) + 60);
-        const int PLYR_X = 80;
-        const int PLYR_SZ = 60;
+        const int PLYR_X = 100;
+        const int PLYR_SZ = 30;
 
         enum gamestates { READY, ALIVE, GAMEOVER }
 
@@ -31,7 +31,8 @@ namespace Flappy
         static int score;
         static int best;
         static int idle_time = 30;
-        static float frame = 0;
+        //static float frame = 0;
+        static int iframe = 0;
 
         static Texture pillar;
 
@@ -98,11 +99,11 @@ namespace Flappy
 
             if (player_vel > 10.0f)
             {
-                frame = 0;
+                iframe = 0;
             }
             else
             {
-                frame -= (player_vel - 10.0f) * 0.03f; //fancy animation
+                //frame -= (player_vel - 10.0f) * 0.03f; //fancy animation
             }
 
             if (player_y > H - GROUND - PLYR_SZ)
@@ -159,7 +160,9 @@ namespace Flappy
             // }
 
             //draw player
-            var birdTexture = bird[(int)frame % 4];
+            //var birdTexture = bird[(int)frame % 4];
+
+            var birdTexture = bird[iframe];
 
             BasicGraphics2.DrawText($"GS : {gamestate}", 10, 0, black);
 
@@ -209,13 +212,13 @@ namespace Flappy
                     {
                         player_vel = -11.7f;
 
-                        frame += 1.0f;
+                        iframe += 1;
 
                         // I don't know how this worked in the C version, 
                         // but this basically exploded in the C#
-                        if (frame == 5.0f)
+                        if (iframe == 5)
                         {
-                            frame = 0;
+                            iframe = 0;
                         }
 
                     }
@@ -225,12 +228,11 @@ namespace Flappy
                     }
                 }
 
-                //Update_stuff();
+                Update_stuff();
                 Draw_stuff();
 
-                //Display.WaitVblankStart();
+                Display.WaitVblankStart();
 
-                //System.Threading.Thread.Sleep(1000 / 60); // was: SDL_Delay(1000 / 60);
                 idle_time++;
             }
         }

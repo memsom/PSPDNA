@@ -55,7 +55,7 @@ namespace testSimple
                     y += 1;
                 }
 
-                //process held heys
+                //process held keys
                 if (Controls.IsKeyHeld(PspCtrlButtons.PSP_CTRL_LEFT))
                 {
                     x -= 2;
