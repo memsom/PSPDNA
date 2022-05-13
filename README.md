@@ -1,4 +1,4 @@
-# PSP Dot Net Anywhere
+# PSP DNA - a DotNet runtime for Sony PSP
 
 ## What is PSPDNA
 
