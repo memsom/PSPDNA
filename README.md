@@ -1,5 +1,17 @@
 # PSP DNA - a DotNet runtime for Sony PSP
 
+# Issues with DotNet
+
+Something in the recent DotNet tooling has broken this code somewhat. I have managed to get it o the point where I can build it again - that much works. But e don;t seem to be able to use the old "net40" target anymore (I believe it was removed fromt he compilers) and so we are stuck with making more modern assemblies. Unfortunately this then breaks Visual Studio completely (at least under macOS). It really can't handle building the code anymore - it basically can't seem to actually handle the options I had to ass to make it more or less work from the command line.
+
+So - rather than struggle - I am now using VSCode for both projects. I have written an interim makefile that will build the projects again. Just run "make all" to buld all of the DotNet code, the Makefile for the native is still separate and lives in the same place. If you are under Windows, you might get VS2022 to work - I guess. But given we don;t use anything from VS2022 to make this code, it probably is overkill anyway.
+
+We seem to have other issues, as the App Menu doesn't seem to cleanly exit and run the selected app, so you might need to just use the legacy mode for now if you are using this for any actual development. This is a bit of a passion roject and so I will keep it going as long as I can, but if I keep hitting these brick walls I might have to shelve it.
+
+One note - I had to install the last version of the dotnet SDK's for core 3.1 and version 6 to make the compiler gods happy - you might also want to do this. It might just work.
+
+When I get a version that works fully again I will do a release.
+
 ## What is PSPDNA
 
 This is the Dot Net Anywhere interpreter ported to the PSP as well as a few basic demos I got running. 
