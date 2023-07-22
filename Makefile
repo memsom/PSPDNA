@@ -6,11 +6,20 @@ CCFLAGS=-nostdlib -target:Exe
 
 all: tet appmenu simple
 
-corelib: 
+corelib: fonts
 	${CLI} ${CLIFLAGS} corlib/corlib.csproj
+	cp -R native/corlib.dll native/apps/
+
+fonts:
+	cp -R native/fonts native/apps/
+
+res: simpleres flappyres 
 
 tet: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/tet.exe tet/Tet.cs
+
+tetapp: corelib
+	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe tet/Tet.cs
 
 appmenu: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe appmenu/Program.cs
@@ -32,9 +41,6 @@ flappyapp: corelib flappyres
 
 flappyres:
 	cp -R flappy/res native
-
-tetapp: corelib
-	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe tet/Tet.cs
 
 run:
 	rm -rf ./native/log.bak

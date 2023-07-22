@@ -97,9 +97,9 @@ namespace tet
                 Key_down();
                 Update_stuff();
                 
-                ///Display.WaitVblankStart();
-
                 idle_time++;
+
+                Display.WaitVblankStart();
             }
         }
 
