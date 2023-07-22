@@ -37,7 +37,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     }
 
     // create a renderer (OpenGL ES2)
-    renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer)
     {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
@@ -135,5 +135,79 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pRetu
         SDL_DestroyTexture(msgtex);
         SDL_FreeSurface(msgsurf);
     }
+    return NULL;
+}
+
+static SDL_Surface *last;
+
+tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    HEAP_PTR pStr = ((HEAP_PTR *)pParams)[0];
+
+    // we need to convert the System.String to a char*
+    STRING2 str;
+
+    U32 i, strLen;
+    str = SystemString_GetString(pStr, &strLen);
+    char str8[strLen + 1];
+    U32 start = 0;
+    for (i = 0; i < strLen; i++)
+    {
+        unsigned char c = str[start + i] & 0xff;
+        str8[i] = c ? c : '?';
+    }
+    str8[i] = 0;
+
+    // we can nor load the value
+    SDL_Surface *surface = SDL_LoadBMP(str8);
+
+    last = surface;
+
+    *(HEAP_PTR *)pReturnValue = (HEAP_PTR)surface;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
+
+    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+
+    //Crash("%i\n%i", pSurface, pTexture);
+
+    *(HEAP_PTR *)pReturnValue = (HEAP_PTR)pTexture;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    // read the param - this will be a path
+    HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
+    int flag = ((int *)pParams)[1];
+    U32 key = ((U32 *)pParams)[2];
+
+    int result = SDL_SetColorKey(pSurface, flag, key);
+
+    *(int *)pReturnValue = (int *)result;
+
+    return NULL;
+}
+
+tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+    HEAP_PTR pTexture = ((HEAP_PTR *)pParams)[0];
+    int x = ((int *)pParams)[1];
+    int y = ((int *)pParams)[2];
+    int w = ((int *)pParams)[3];
+    int h = ((int *)pParams)[4];
+
+    int result = SDL_RenderCopy(renderer, pTexture, NULL,&(SDL_Rect){x, y, w, h});
+
+    *(int *)pReturnValue = (int *)result;
+
     return NULL;
 }

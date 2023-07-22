@@ -15,11 +15,26 @@ tet: corelib
 appmenu: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe appmenu/Program.cs
 
-simple: corelib
+simple: corelib simpleres
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/simple.exe testSimple/Program.cs
 
-simpleapp: corelib
+simpleapp: corelib simpleres
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe testSimple/Program.cs
+
+simpleres:
+	cp -R testSimple/res native
+
+flappy: corelib flappyres
+	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/flappy.exe flappy/Program.cs
+
+flappyapp: corelib flappyres
+	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe flappy/Program.cs
+
+flappyres:
+	cp -R flappy/res native
+
+tetapp: corelib
+	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe tet/Tet.cs
 
 run:
 	rm -rf ./native/log.bak
