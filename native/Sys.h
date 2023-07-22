@@ -22,6 +22,8 @@
 #define __SYS_H
 
 #include "Config.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /*#ifdef _DEBUG
 void* mallocTrace(int s, char *pFile, int line);
@@ -56,5 +58,9 @@ U64 msTime();
 U64 microTime();
 #endif
 void SleepMS(U32 ms);
+
+void initLogfile();
+void closeLogfile();
+void log_s(char *pMsg, ...);
 
 #endif

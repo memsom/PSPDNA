@@ -18,7 +18,12 @@ appmenu: corelib
 simple: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/simple.exe testSimple/Program.cs
 
-run: all
+simpleapp: corelib
+	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe testSimple/Program.cs
+
+run:
+	rm -rf ./native/log.bak
+	mv ./native/log.txt ./native/log.bak
 	/Applications/PPSSPPSDL.app/Contents/MacOS/PPSSPPSDL ./native/EBOOT.PBP
 
 native:

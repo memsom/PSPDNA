@@ -365,3 +365,5 @@ MigrationBackup/
 .DS_Store
 EBOOT.PBP
 *.PBP
+native/log.bak
+native/log.txt

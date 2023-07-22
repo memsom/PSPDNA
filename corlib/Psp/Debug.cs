@@ -26,5 +26,18 @@ namespace Psp
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern public static void ScreenPrintf(int x, int y, string s);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        extern static void NativeWrite(string s);
+
+        public static void Write(string s, params object[] p)
+        {
+            NativeWrite(string.Format(s, p));
+        }
+
+        public static void WriteLine(string s, params object[] p)
+        {
+            NativeWrite(string.Format($"{s}\n", p));
+        }
     }
 }

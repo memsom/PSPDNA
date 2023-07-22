@@ -191,6 +191,7 @@ static tInternalCall internalCalls[] = {
 	{NULL,                 NULL,     "Internal_Send", System_Net_Sockets_Internal_Send, TYPE_SYSTEM_INT32, 6, {TYPE_SYSTEM_INTPTR, TYPE_SYSTEM_ARRAY_BYTE, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INTPTR}},
 
 	{"Psp",   "Debug", "NativeScreenPrintf",    Psp_Debug_nativeScreenPrintf, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_STRING}},
+	{NULL,       NULL, "NativeWrite",           Psp_Debug_nativeWrite, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_STRING}},
     {NULL,       NULL, "ScreenPrintf",          Psp_Debug_nativeScreenPrintfXY, TYPE_SYSTEM_VOID, 3, {TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_STRING}},
     {NULL,       NULL, "ScreenClear",           Psp_Debug_nativeScreenClear, TYPE_SYSTEM_VOID, 0},
 	{NULL,       NULL, "ScreenSetXY",           Psp_Debug_nativeScreenSetXY, TYPE_SYSTEM_VOID, 2, {TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32}},

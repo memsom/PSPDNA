@@ -37,6 +37,30 @@ tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnVal
 	return NULL;
 }
 
+tAsyncCall *Psp_Debug_nativeWrite(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
+	HEAP_PTR string;
+	STRING2 str;
+	U32 i, strLen;
+
+	I32 SUB_LEN = 129;
+	string = *(HEAP_PTR *)pParams;
+	unsigned char str8[SUB_LEN];
+	str = SystemString_GetString(string, &strLen);
+	U32 start = 0;
+	U32 thisLen = (strLen > SUB_LEN) ? SUB_LEN : strLen;
+	for (i = 0; i < thisLen; i++)
+	{
+		unsigned char c = str[start + i] & 0xff;
+		str8[i] = c ? c : '?';
+	}
+	str8[i] = 0;
+
+	log_s(str8);
+
+	return NULL;
+}
+
 tAsyncCall *Psp_Debug_nativeScreenPrintfXY(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
 

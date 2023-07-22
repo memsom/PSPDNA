@@ -196,3 +196,46 @@ void SleepMS(U32 ms)
 	//usleep((ms % 1000) * 1000);
 #endif
 }
+
+FILE *pLogger = NULL;
+
+void initLogfile()
+{
+	if(pLogger == NULL)
+	{
+		pLogger=fopen("log.txt", "w");
+		if(pLogger == NULL)
+		{
+			Crash("logfile could not be opened");
+		}
+        
+		fseek(pLogger, 0, SEEK_END); // got to the end of the file
+
+		log_s("--------------------\nstarted\n\n");
+	}
+}
+
+void closeLogfile()
+{
+	if(pLogger != NULL)
+	{
+		log_s("\nended\n--------------------\n");
+		fflush(pLogger);
+		fclose(pLogger);
+	}
+}
+
+void log_s(char *pMsg, ...)
+{
+	if(pLogger == NULL)
+	{
+		Crash("logfile is not open");
+	}
+
+	va_list va;
+	va_start(va, pMsg);
+	fprintf(pLogger, pMsg, va);
+	va_end(va);
+
+	fflush(pLogger);
+}

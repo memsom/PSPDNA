@@ -8,6 +8,8 @@ namespace testSimple
     {
         static void Main()
         {
+            Psp.Debug.WriteLine("a test");
+
             int x = 0;
             int y = 0;
 

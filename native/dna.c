@@ -74,6 +74,8 @@ const char APP_LEGACY[] = "app.exe";
 
 int main(int argc, char *argv[])
 {
+	initLogfile();
+
 	pspDebugScreenInit();
 	setupExitCallback();
 
@@ -134,6 +136,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	closeLogfile();
+	
 	sceKernelExitGame();
 
 	return result;
