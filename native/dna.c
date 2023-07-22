@@ -60,7 +60,7 @@ static void ShowUsage()
 int run(char *name)
 {
 	// because DNA is command line, we need to inject the
-	// path to the app.dll...
+	// path to the app.exe...
 	char *args[2];
 	args[0] = NULL;
 	args[1] = name;

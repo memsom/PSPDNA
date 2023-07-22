@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net40</TargetFramework>
-     <NoStdLib>true</NoStdLib>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>corlib</RootNamespace>
     <AssemblyName>corlib</AssemblyName>
+    <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
