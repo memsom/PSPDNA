@@ -83,7 +83,6 @@ namespace tet
         //the entry point and main game loop
         static void Main()
         {
-            Psp.Debug.WriteLine("Starting main");
             Setup();
             New_game();
 
@@ -106,19 +105,14 @@ namespace tet
         //initial setup to get the window and rendering going
         static void Setup()
         {
-            Psp.Debug.WriteLine("Starting Setup");
-
             rand = new Random();
 
-            Psp.Debug.WriteLine("Init graphics");
             BasicGraphics2.Init();
-            Psp.Debug.WriteLine("Exit setup");
         }
 
         //handle a key press from the player
         static public void Key_down()
         {
-            Psp.Debug.WriteLine("Start keydown");
             if (falling_shape > 0)
             {
                 if (Controls.IsKeyDown(PspCtrlButtons.PSP_CTRL_LEFT))
@@ -191,7 +185,6 @@ namespace tet
         //reset score and pick one extra random piece
         static void New_game()
         {
-            Psp.Debug.WriteLine("Starting new_game");
             //memset(board, 0, sizeof board);
             //board = new byte[BHEIGHT * BWIDTH];
             board = new List<byte[]>();
@@ -205,7 +198,6 @@ namespace tet
             score = 0;
             lines = 0;
             falling_shape = 0;
-            Psp.Debug.WriteLine("Exit new_game");
         }
 
         //randomly pick a new next piece, and put the old on in play

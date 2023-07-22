@@ -2,11 +2,11 @@ CLI=dotnet
 CLIFLAGS=build
 CC=csc
 LIBS=native/corlib.dll
-CCFLAGS=-nostdlib -target:Exe 
+CCFLAGS=-nostdlib -target:Exe -unsafe -langversion:8.0 -nullable:disable -deterministic -optimize- -nologo -noconfig
 
 all: tet appmenu simple
 
-corelib: fonts
+corelib: fonts res
 	${CLI} ${CLIFLAGS} corlib/corlib.csproj
 	cp -R native/corlib.dll native/apps/
 
@@ -24,19 +24,19 @@ tetapp: corelib
 appmenu: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe appmenu/Program.cs
 
-simple: corelib simpleres
+simple: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/simple.exe testSimple/Program.cs
 
-simpleapp: corelib simpleres
+simpleapp: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe testSimple/Program.cs
 
 simpleres:
 	cp -R testSimple/res native
 
-flappy: corelib flappyres
+flappy: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/apps/flappy.exe flappy/Program.cs
 
-flappyapp: corelib flappyres
+flappyapp: corelib
 	${CC} ${CCFLAGS} -reference:${LIBS} -out:native/Dna.AppMenu.exe flappy/Program.cs
 
 flappyres:
