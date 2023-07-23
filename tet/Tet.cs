@@ -88,7 +88,6 @@ namespace tet
 
             while (State.IsRunning())
             {
-                //Display.WaitVblankStart();
                 Draw_stuff();
                 BasicGraphics2.SwapBuffers();
 
@@ -97,8 +96,6 @@ namespace tet
                 Update_stuff();
                 
                 idle_time++;
-
-                Display.WaitVblankStart();
             }
         }
 
