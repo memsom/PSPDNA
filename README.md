@@ -1,17 +1,5 @@
 # PSP DNA - a DotNet runtime for Sony PSP
 
-# Issues with DotNet
-
-Something in the recent DotNet tooling has broken this code somewhat. I have managed to get it o the point where I can build it again - that much works. But e don;t seem to be able to use the old "net40" target anymore (I believe it was removed fromt he compilers) and so we are stuck with making more modern assemblies. Unfortunately this then breaks Visual Studio completely (at least under macOS). It really can't handle building the code anymore - it basically can't seem to actually handle the options I had to ass to make it more or less work from the command line.
-
-So - rather than struggle - I am now using VSCode for both projects. I have written an interim makefile that will build the projects again. Just run "make all" to buld all of the DotNet code, the Makefile for the native is still separate and lives in the same place. If you are under Windows, you might get VS2022 to work - I guess. But given we don;t use anything from VS2022 to make this code, it probably is overkill anyway.
-
-We seem to have other issues, as the App Menu doesn't seem to cleanly exit and run the selected app, so you might need to just use the legacy mode for now if you are using this for any actual development. This is a bit of a passion roject and so I will keep it going as long as I can, but if I keep hitting these brick walls I might have to shelve it.
-
-One note - I had to install the last version of the dotnet SDK's for core 3.1 and version 6 to make the compiler gods happy - you might also want to do this. It might just work.
-
-When I get a version that works fully again I will do a release.
-
 ## What is PSPDNA
 
 This is the Dot Net Anywhere interpreter ported to the PSP as well as a few basic demos I got running. 
@@ -38,3 +26,15 @@ The graphics primitives are under PSP namespace and are all pretty simple at the
 
 ## I give no warranty!! Use at your own risk.
 This is still experimental and I haven't had much time to look at it since late 2020/early 2021, so it is still at an early stage of development.
+
+# Issues with modern DotNet tooling
+
+Dotnet has moved on since I got this originally working. As such the process of building has slightly changed. The tooling changes completely broke the master branch. I have managed to get it to the point where I can build it again - that much works. But we don't seem to be able to use the old "net40" target anymore (I believe it was removed fromt he compilers) and so we are stuck with making more modern assemblies. Unfortunately this then breaks Visual Studio completely (at least under macOS). It really can't handle building the code anymore - it basically can't seem to actually handle the options I had to add to make it more or less work from the command line. The issues mostly revolve around modern tooling not honouring the `<NoStdLib>` tag in the _.csproj_ files. I did kind of get that working under VS Mac 2022, but the comiler then refused to link to the `corlib.dll`. I might have fixed this later on by throwing more settings at the projects, but VS Mac just became too upredictable and VSCode is now perfectly adequate.
+
+So - rather than struggle - I am now using VSCode for all aspects of the project (as the C was always being done in VSCode with a Makefile.) I have written a Makefile that will build the C# projects - this makes it simple to use VSCode (as we have no debug anyway, so it will never be a "thing" till the VM supports soft debugging somehow.) Just run "make all" to buld all of the DotNet code, the Makefile for the native is still separate and lives in the same place. If you are under Windows, you might get VS2022 to work - I guess. But given we don;t use anything from VS2022 to make this code, it probably is overkill anyway.
+
+We did have other build issues - as it turned out the PSPSDK I moved from my old laptop was actually the wrong one. I have now got a working SDK (that I built for macOS 64bit, works with Catalina, also tested under Ventura.) I will probably upload that SDK as an asset, but you should probably use the latest version fromt he main PSPSDK repo (build the compiler if there isn't a prebuilt one.) The version that didn't work had a non working SDL and so the Tet app ran, but to a black screen, and the menu was glitchy. If you see this, your issue will be the same as mine.
+
+One note - I had to install the last version of the dotnet SDK's for core 3.1 and version 6 to make the compiler gods happy - you might also want to do this. It might just work. I think 6.0.X should work.
+
+When I get a version that works fully again I will do a release.
