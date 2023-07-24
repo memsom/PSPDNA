@@ -29,6 +29,8 @@
 
 // #include "PInvoke.h"
 
+void __debugBreakpoint();
+
 typedef struct tBreakPoint_ tBreakPoint;
 
 struct tBreakPoint_
@@ -135,10 +137,9 @@ asm(
 
 tAsyncCall *System_Diagnostics_Debugger_Break(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
-#if defined(_DEBUG)
     // this is PSP specific
     __debugBreakpoint();
-#endif
+    
     return NULL;
 }
 

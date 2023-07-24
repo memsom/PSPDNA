@@ -365,9 +365,4 @@ MigrationBackup/
 .DS_Store
 EBOOT.PBP
 *.PBP
-native/log.bak
-native/log.txt
-native/apps/fonts/arial.ttf
-native/apps/fonts/tahoma.ttf
-native/apps/fonts/verdana.ttf
-native/res/background.pxm
+build/
