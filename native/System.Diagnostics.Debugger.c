@@ -26,8 +26,10 @@
 #include "MetaData.h"
 #include "Types.h"
 #include "Type.h"
+
 //#include "PInvoke.h"
 
+void pspDebugBreakpoint(void);
 
 typedef struct tBreakPoint_ tBreakPoint;
 
@@ -112,9 +114,18 @@ int Debugger_SetBreakPoint(char* pID, int sequencePoint)
     return 0;
 }
 
+asm  (
+    ".global __debugBreakpoint\n"
+	".set noreorder\n"
+	"__debugBreakpoint:\tbreak\n"
+	"jr    $31\n"
+	"nop\n"
+);
+
 tAsyncCall* System_Diagnostics_Debugger_Break(PTR pThis_, PTR pParams, PTR pReturnValue) {
-#if defined(_WIN32) && defined(_DEBUG)
-    __debugbreak();
+#if defined(_DEBUG)
+       // this is PSP specific
+       __debugBreakpoint();
 #endif
     return NULL;
 }
