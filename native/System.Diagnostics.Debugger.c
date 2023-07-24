@@ -27,24 +27,24 @@
 #include "Types.h"
 #include "Type.h"
 
-//#include "PInvoke.h"
-
-void pspDebugBreakpoint(void);
+// #include "PInvoke.h"
 
 typedef struct tBreakPoint_ tBreakPoint;
 
-struct tBreakPoint_ {
-    char* pID;
+struct tBreakPoint_
+{
+    char *pID;
     // MAX breakpoints in a single method
     int breakOnSequencePoints[100];
     int offset;
 
-    tBreakPoint* next;
+    tBreakPoint *next;
 };
 
-static tBreakPoint* pBreakpoints;
+static tBreakPoint *pBreakpoints;
 
-int Debugger_Reset() {
+int Debugger_Reset()
+{
     // Clear all break points
     pBreakpoints = NULL;
 
@@ -56,14 +56,17 @@ int Debugger_Reset() {
     return 0;
 }
 
-int Debugger_Clear_BreakPoints() {
+int Debugger_Clear_BreakPoints()
+{
     // Clear all break points
     pBreakpoints = NULL;
     return 0;
 }
 
-int Debugger_Continue() {
-    if (waitingOnBreakPoint) {
+int Debugger_Continue()
+{
+    if (waitingOnBreakPoint)
+    {
         releaseBreakPoint = 1;
 
         // Resume execution
@@ -72,19 +75,22 @@ int Debugger_Continue() {
     return 1;
 }
 
-int Debugger_Step() {
+int Debugger_Step()
+{
     alwaysBreak = 1;
     return 0;
 }
 
-int Debugger_SetBreakPoint(char* pID, int sequencePoint)
+int Debugger_SetBreakPoint(char *pID, int sequencePoint)
 {
-    tBreakPoint* pNode = pBreakpoints;
-    tBreakPoint* pTail = NULL;
+    tBreakPoint *pNode = pBreakpoints;
+    tBreakPoint *pTail = NULL;
 
     // Search for method node
-    while (pNode != NULL) {
-        if (strcmp(pNode->pID, pID) == 0) {
+    while (pNode != NULL)
+    {
+        if (strcmp(pNode->pID, pID) == 0)
+        {
             break;
         }
         pTail = pNode;
@@ -92,60 +98,72 @@ int Debugger_SetBreakPoint(char* pID, int sequencePoint)
     }
 
     // Didn't find the node
-    if (pNode == NULL) {
+    if (pNode == NULL)
+    {
         pNode = TMALLOC(tBreakPoint);
         pNode->pID = mallocForever((U32)strlen(pID) + 1);
         strcpy(pNode->pID, pID);
         pNode->offset = 0;
         pNode->next = NULL;
 
-        if (pBreakpoints == NULL) {
+        if (pBreakpoints == NULL)
+        {
             pBreakpoints = pNode;
-        } else {
+        }
+        else
+        {
             // Append
             pTail->next = pNode;
-		}
+        }
     }
-    
-    if (pNode->offset < 100) {
+
+    if (pNode->offset < 100)
+    {
         pNode->breakOnSequencePoints[pNode->offset++] = sequencePoint;
     }
 
     return 0;
 }
 
-asm  (
+// this code basically breaks the process
+asm(
     ".global __debugBreakpoint\n"
-	".set noreorder\n"
-	"__debugBreakpoint:\tbreak\n"
-	"jr    $31\n"
-	"nop\n"
-);
+    ".set noreorder\n"
+    "__debugBreakpoint:\tbreak\n"
+    "jr    $31\n"
+    "nop\n");
 
-tAsyncCall* System_Diagnostics_Debugger_Break(PTR pThis_, PTR pParams, PTR pReturnValue) {
+tAsyncCall *System_Diagnostics_Debugger_Break(PTR pThis_, PTR pParams, PTR pReturnValue)
+{
 #if defined(_DEBUG)
-       // this is PSP specific
-       __debugBreakpoint();
+    // this is PSP specific
+    __debugBreakpoint();
 #endif
     return NULL;
 }
 
-int CheckIfSequencePointIsBreakpoint(tMethodState* pMethodState, I32 sequencePoint) {
-	tBreakPoint* pHead;
-	int doBreakpoint;
-    tDebugMetaDataEntry* pDebugEntry;
+int CheckIfSequencePointIsBreakpoint(tMethodState *pMethodState, I32 sequencePoint)
+{
+    tBreakPoint *pHead;
+    int doBreakpoint;
+    tDebugMetaDataEntry *pDebugEntry;
 
     pDebugEntry = pMethodState->pMethod->pJITted->pDebugMetadataEntry;
     U32 ilOffset = pDebugEntry->sequencePoints[sequencePoint];
 
-    if (!alwaysBreak) {
+    if (!alwaysBreak)
+    {
         doBreakpoint = 0;
         pHead = pBreakpoints;
 
-        while (pHead != NULL) {
-            if (strcmp(pHead->pID, pDebugEntry->pID) == 0) {
-                for (int i = 0; i < pHead->offset; i++) {
-                    if (pHead->breakOnSequencePoints[i] == sequencePoint) {
+        while (pHead != NULL)
+        {
+            if (strcmp(pHead->pID, pDebugEntry->pID) == 0)
+            {
+                for (int i = 0; i < pHead->offset; i++)
+                {
+                    if (pHead->breakOnSequencePoints[i] == sequencePoint)
+                    {
                         doBreakpoint = 1;
                         break;
                     }
@@ -154,7 +172,8 @@ int CheckIfSequencePointIsBreakpoint(tMethodState* pMethodState, I32 sequencePoi
             pHead = pHead->next;
         }
 
-        if (doBreakpoint == 0) {
+        if (doBreakpoint == 0)
+        {
             return 0;
         }
     }
@@ -165,10 +184,10 @@ int CheckIfSequencePointIsBreakpoint(tMethodState* pMethodState, I32 sequencePoi
     // TODO: Handle overflow
     unsigned char payload[1024];
     sprintf(payload, "{\"command\":\"breakpoint\", \"ilOffset\":%d, \"sequencePoint\":%d,\"ID\":\"%s\"}", ilOffset, sequencePoint, pDebugEntry->pID);
-//#ifndef _WIN32
-//    invokeJsFunc("browser.js", "SendDebuggerMessage", payload);
-//#else
+    // #ifndef _WIN32
+    //     invokeJsFunc("browser.js", "SendDebuggerMessage", payload);
+    // #else
     printf("%s\n", payload);
-//#endif
-	return 1;
+    // #endif
+    return 1;
 }
