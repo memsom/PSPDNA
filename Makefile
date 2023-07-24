@@ -2,7 +2,7 @@ CLI=dotnet
 CLIFLAGS=build
 CC=csc
 LIBS=native/corlib.dll
-CCFLAGS=-nostdlib -target:Exe -unsafe -langversion:8.0 -nullable:disable -deterministic -optimize- -nologo -noconfig
+CCFLAGS=-nostdlib -target:Exe -unsafe -langversion:7.3 -nullable:disable -deterministic -optimize- -nologo -noconfig
 
 all: tet appmenu simple
 
