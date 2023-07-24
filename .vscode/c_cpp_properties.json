@@ -18,7 +18,8 @@
             "compilerPath": "/usr/local/pspdev/bin/psp-gcc",
             "cStandard": "c11",
             "cppStandard": "c++14",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         },
         {
             "name": "psp-win10",
@@ -33,12 +34,13 @@
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE",
-                "__PSP__"            
+                "__PSP__"
             ],
             "compilerPath": "C:/pspsdk/bin/psp-gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++14",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
