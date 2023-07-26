@@ -18,20 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if defined(__PSP__)
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspdisplay.h>
 #include <pspctrl.h>
+#else
+#include "dummypspkeys.h"
+#endif
+
 #include "callback.h"
 #include "controls.h"
 #include "Psp.Controls.h"
 
+#if defined(__PSP__)
 #define VERS 1
 #define REVS 0
 
 PSP_MODULE_INFO("dna", PSP_MODULE_USER, VERS, REVS);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_VFPU);
 PSP_HEAP_SIZE_MAX();
+#endif
 
 #include "Compat.h"
 #include "Sys.h"
@@ -44,7 +51,11 @@ PSP_HEAP_SIZE_MAX();
 #include "System.Net.Sockets.Socket.h"
 #include "MethodState.h"
 
+#if defined(__PSP__)
 #define printf pspDebugScreenPrintf
+#endif
+
+int dna_main(int argc, char **argp);
 
 static void ShowUsage()
 {
@@ -76,11 +87,13 @@ int main(int argc, char *argv[])
 {
 	initLogfile();
 
+#if defined(__PSP__)
 	pspDebugScreenInit();
 	setupExitCallback();
 
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+#endif
 
 	int result = 0;
 
@@ -101,7 +114,7 @@ int main(int argc, char *argv[])
 			// if the name is "valid", we try to run the app...
 			result = run(pAppName);
 
-			if(result == 0)
+			if (result == 0)
 			{
 				shouldJustExit = 1;
 			}
@@ -125,7 +138,9 @@ int main(int argc, char *argv[])
 		// catch the game end and spin so thatthe app doesn't just close.
 		while (isRunning())
 		{
+#if defined(__PSP__)
 			sceDisplayWaitVblankStart();
+#endif
 
 			pollLatch();
 
@@ -137,8 +152,10 @@ int main(int argc, char *argv[])
 	}
 
 	closeLogfile();
-	
+
+#if defined(__PSP__)
 	sceKernelExitGame();
+#endif
 
 	return result;
 }
@@ -159,8 +176,8 @@ int dna_main(int argc, char **argp)
 		ShowUsage();
 	}
 
-	//enable this to stop the execution and allow the debugger to attach
-	//while (1)	;
+	// enable this to stop the execution and allow the debugger to attach
+	// while (1)	;
 
 	// Read any flags passed in
 	for (i = 1; i < (U32)argc; i++)
@@ -344,6 +361,6 @@ int dna_main(int argc, char **argp)
 	}
 #endif
 
-	//Crash("FINISHED!!!");
+	// Crash("FINISHED!!!");
 	return retValue;
 }

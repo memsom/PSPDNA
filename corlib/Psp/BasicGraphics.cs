@@ -32,5 +32,8 @@ namespace Psp
         {
             DrawRect(rect.X, rect.Y, rect.Width, rect.Height, color);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void DrawImage(int x, int y, int w, int h, uint[] pixels);
     }
 }

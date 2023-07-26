@@ -27,9 +27,13 @@
 #include "Types.h"
 #include "Type.h"
 
+#if defined(__PSP__)
+
 #include <pspdebug.h>
 
 #define printf pspDebugScreenPrintf 
+
+#endif
 
 tAsyncCall* System_Console_Write(PTR pThis_, PTR pParams, PTR pReturnValue) {
 	HEAP_PTR string;

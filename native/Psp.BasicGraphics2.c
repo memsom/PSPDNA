@@ -1,4 +1,3 @@
-#define __PSP__
 #include "controls.h"
 #include "callback.h"
 #include "Compat.h"
@@ -10,7 +9,10 @@
 #include "System.String.h"
 
 #include "Psp.BasicGraphics.h"
+
+#if defined(__PSP__)
 #include <pspdebug.h>
+#endif
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -57,10 +59,10 @@ tAsyncCall *Psp_BasicGraphics_nativeClear2(PTR pThis_, PTR pParams, PTR pReturnV
 {
     U32 color = INTERNALCALL_PARAM(0, U32);
 
-    int a = (u8)(color >> 24);
-    int r = (u8)(color >> 16);
-    int g = (u8)(color >> 8);
-    int b = (u8)(color >> 0);
+    int a = (U8)(color >> 24);
+    int r = (U8)(color >> 16);
+    int g = (U8)(color >> 8);
+    int b = (U8)(color >> 0);
 
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
     SDL_RenderClear(renderer);
@@ -82,10 +84,10 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawRect2(PTR pThis_, PTR pParams, PTR pRetu
     int h = INTERNALCALL_PARAM(size * 3, I32);
     U32 color = INTERNALCALL_PARAM(size * 4, U32);
 
-    int a = (u8)(color >> 24);
-    int r = (u8)(color >> 16);
-    int g = (u8)(color >> 8);
-    int b = (u8)(color >> 0);
+    int a = (U8)(color >> 24);
+    int r = (U8)(color >> 16);
+    int g = (U8)(color >> 8);
+    int b = (U8)(color >> 0);
 
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
     SDL_Rect rect = {x, y, w, h};
@@ -119,10 +121,10 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pRetu
         str8[i] = 0;
 
         // decode the colour
-        int a = (u8)(color >> 24);
-        int r = (u8)(color >> 16);
-        int g = (u8)(color >> 8);
-        int b = (u8)(color >> 0);
+        int a = (U8)(color >> 24);
+        int r = (U8)(color >> 16);
+        int g = (U8)(color >> 8);
+        int b = (U8)(color >> 0);
 
         // this code is basically the same as the Tet demo originally used.
         int w, h;

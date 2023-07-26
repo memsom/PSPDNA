@@ -70,14 +70,20 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <sys/types.h>
-////#include <sys/uio.h>
 #include <unistd.h>
-////#include <termios.h>
+
 #include <sys/ioctl.h>
 #include <sys/types.h>
-// #include <dev/wscons/wsconsio.h>
-////#include <dlfcn.h>
+
+
+#if defined(__APPLE__)
+#include <glob.h>
+#endif
+
+#if defined(__PSP__)
 #include "diet-glob.h"
+#endif
+
 
 #define O_BINARY 0
 #define LIB_PREFIX "./"

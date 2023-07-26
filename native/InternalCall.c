@@ -211,6 +211,7 @@ static tInternalCall internalCalls[] = {
     {NULL,             NULL, "NativeClear",     Psp_BasicGraphics_nativeClear, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_UINT32}},
     {NULL,             NULL, "SwapBuffers",     Psp_BasicGraphics_nativeSwapBuffers, TYPE_SYSTEM_VOID, 0},
     {NULL,             NULL, "NativeDrawRect",  Psp_BasicGraphics_nativeDrawRect, TYPE_SYSTEM_VOID, 5, {TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_UINT32}},
+    {NULL,             NULL, "NativeDrawImage",  Psp_BasicGraphics_nativeDrawImage, TYPE_SYSTEM_VOID, 5, {TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INTPTR}},
 
     {NULL, "BasicGraphics2", "Init",            Psp_BasicGraphics_nativeInit2, TYPE_SYSTEM_VOID, 0},
     {NULL,             NULL, "NativeClear",     Psp_BasicGraphics_nativeClear2, TYPE_SYSTEM_VOID, 1, {TYPE_SYSTEM_UINT32}},

@@ -24,7 +24,12 @@
 #include <sys/time.h>
 #endif // _WIN32
 
+#if defined(__PSP__)
+
+// this makes the PSP stuff redirect to the debug onscreen printing
 #include <pspdebug.h>
+
+#endif
 
 #include "Compat.h"
 #include "Sys.h"
@@ -32,7 +37,12 @@
 #include "MetaData.h"
 #include "Types.h"
 
+
+#if defined(__PSP__)
+
 #define printf pspDebugScreenPrintf
+
+#endif
 
 void printline(char *buff, int size, int linesize)
 {

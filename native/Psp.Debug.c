@@ -7,8 +7,13 @@
 #include "Types.h"
 #include "Type.h"
 
+#if defined(__PSP__)
+
+// this makes the PSP stuff redirect to the debug onscreen printing
 #include <pspdebug.h>
 #include <pspiofilemgr.h>
+
+#endif
 
 // this is basically the same as System_Console_Write(..)
 tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnValue)
@@ -30,9 +35,13 @@ tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnVal
 	}
 	str8[i] = 0;
 
+#if defined(__PSP__)
 	pspDebugScreenPrintf(str8);
 	sceIoWrite(2, str8, thisLen);
 	sceIoWrite(2, "\n", 1);
+#else
+	printf("print: %s\n", str8);
+#endif
 
 	return NULL;
 }
@@ -64,12 +73,12 @@ tAsyncCall *Psp_Debug_nativeWrite(PTR pThis_, PTR pParams, PTR pReturnValue)
 tAsyncCall *Psp_Debug_nativeScreenPrintfXY(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
 
-    I32 offset = 0;
+	I32 offset = 0;
 	I32 x = INTERNALCALL_PARAM(offset, I32);
 	offset += sizeof(I32);
 	I32 y = INTERNALCALL_PARAM(offset, I32);
-    
-    HEAP_PTR string;
+
+	HEAP_PTR string;
 	STRING2 str;
 	U32 i, strLen;
 
@@ -87,15 +96,21 @@ tAsyncCall *Psp_Debug_nativeScreenPrintfXY(PTR pThis_, PTR pParams, PTR pReturnV
 	}
 	str8[i] = 0;
 
-    pspDebugScreenSetXY((int)x, (int)y);
+#if defined(__PSP__)
+	pspDebugScreenSetXY((int)x, (int)y);
 	pspDebugScreenPrintf(str8);
-
+#else
+    printf("psp debug screen set to (%i, %i)", (int)x, (int)y);
+	printf("print: %s\n", str8);
+#endif
 	return NULL;
 }
 
 tAsyncCall *Psp_Debug_nativeScreenClear(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
+#if defined(__PSP__)
 	pspDebugScreenClear();
+#endif
 
 	return NULL;
 }
@@ -105,7 +120,11 @@ tAsyncCall *Psp_Debug_nativeScreenSetXY(PTR pThis_, PTR pParams, PTR pReturnValu
 	int x = INTERNALCALL_PARAM(0, I32);
 	int y = INTERNALCALL_PARAM(sizeof(I32), I32);
 
+#if defined(__PSP__)
 	pspDebugScreenSetXY(x, y);
+#else
+	printf("psp debug screen set to (%i, %i)", x, y);
+#endif
 
 	return NULL;
 }

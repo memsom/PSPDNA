@@ -127,6 +127,7 @@ int Debugger_SetBreakPoint(char *pID, int sequencePoint)
     return 0;
 }
 
+#if defined(__PSP__)
 // this code basically breaks the process
 asm(
     ".global __debugBreakpoint\n"
@@ -134,6 +135,16 @@ asm(
     "__debugBreakpoint:\tbreak\n"
     "jr    $31\n"
     "nop\n");
+#else
+
+void __debugBreakpoint()
+{
+    #if defined(__APPLE__)
+    __builtin_trap();
+    #endif
+}
+
+#endif
 
 tAsyncCall *System_Diagnostics_Debugger_Break(PTR pThis_, PTR pParams, PTR pReturnValue)
 {

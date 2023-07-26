@@ -7,11 +7,18 @@
 
 #include "Psp.Display.h"
 
+#if defined(__PSP__)
 #include <pspdisplay.h>
+#endif
 
-tAsyncCall* Psp_Display_nativeWaitVblankStart(PTR pThis_, PTR pParams, PTR pReturnValue)
+tAsyncCall *Psp_Display_nativeWaitVblankStart(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
-    *(int*)pReturnValue = sceDisplayWaitVblankStart();
+    
+#if defined(__PSP__)
+    *(int *)pReturnValue = sceDisplayWaitVblankStart();
+#else
+    printf("VBlank called\n");
+#endif
 
-	return NULL;
+    return NULL;
 }

@@ -6,10 +6,14 @@
 #include "MetaData.h"
 #include "Types.h"
 #include "Type.h"
+#include "System.String.h"
 
 #include "Psp.Controls.h"
+
+#if defined(__PSP__)
 #include <pspctrl.h>
 #include <pspdebug.h>
+#endif
 
 tAsyncCall *Psp_Controls_nativeJoystickX(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
@@ -82,7 +86,7 @@ tAsyncCall *Psp_State_nativeIsRunning(PTR pThis_, PTR pParams, PTR pReturnValue)
     return NULL;
 }
 
-char* pAppName = NULL;
+char *pAppName = NULL;
 
 tAsyncCall *Psp_State_setAppName(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
@@ -102,8 +106,8 @@ tAsyncCall *Psp_State_setAppName(PTR pThis_, PTR pParams, PTR pReturnValue)
     str8[i] = 0;
 
     // copy the data to the internal holder
-    pAppName = malloc(strLen +1);
-    strncpy(pAppName, &str8, strLen+1);
+    pAppName = malloc(strLen + 1);
+    strncpy(pAppName, &str8, strLen + 1);
 
     return NULL;
 }

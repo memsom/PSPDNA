@@ -32,5 +32,24 @@
                 A = a
             };
         }
+
+        // borrowed the definitions from here:
+        // https://www.rapidtables.com/web/color/RGB_Color.html
+        public static Color White { get; } = FromRGBA(255, 255, 255);
+        public static Color Black { get; } = FromRGBA(0, 0, 0);
+        public static Color Red { get; } = FromRGBA(255, 0, 0);
+        public static Color Green { get; } = FromRGBA(0, 128, 0);
+        public static Color Lime { get; } = FromRGBA(0, 255, 0);
+        public static Color Blue { get; } = FromRGBA(0, 0, 255);
+        public static Color Cyan { get; } = FromRGBA(0, 255, 255);
+        public static Color Yellow { get; } = FromRGBA(255, 255, 0);
+        public static Color Magenta { get; } = FromRGBA(255, 0, 255);
+        public static Color Silver { get; } = FromRGBA(192, 192, 192);
+        public static Color Gray { get; } = FromRGBA(128, 128, 128);
+        public static Color Maroon { get; } = FromRGBA(128, 0, 0);
+        public static Color Olive { get; } = FromRGBA(128, 128, 0);
+        public static Color Purple { get; } = FromRGBA(128, 0, 128);
+        public static Color Teal { get; } = FromRGBA(0, 128, 128);
+        public static Color Navy { get; } = FromRGBA(0, 0, 128);
     }
 }

@@ -8,6 +8,8 @@
         "sdl_main.h": "c",
         "sdl_stdinc.h": "c",
         "sdl_config.h": "c",
-        "sdl_ttf.h": "c"
+        "sdl_ttf.h": "c",
+        "pspkernel.h": "c",
+        "pspctrl.h": "c"
     }
 }
