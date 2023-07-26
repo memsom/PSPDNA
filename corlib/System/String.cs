@@ -26,13 +26,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace System {
+namespace System
+{
 	public class String : ICloneable, IEnumerable, IEnumerable<char>,
-		IComparable, IComparable<string>, IEquatable<string> {
+		IComparable, IComparable<string>, IEquatable<string>
+	{
 
 		public static readonly string Empty = "";
 
-		public static bool IsNullOrEmpty(string value) {
+		public static bool IsNullOrEmpty(string value)
+		{
 			return (value == null) || (value.length == 0);
 		}
 
@@ -47,7 +50,7 @@ namespace System {
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		extern public String(char[] chars, int startIndex, int length);
-		
+
 		#region Private Internal Calls
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -71,54 +74,67 @@ namespace System {
 
 		#endregion
 
-		public virtual int Length {
-			get {
+		public virtual int Length
+		{
+			get
+			{
 				return this.length;
 			}
 		}
 
 		[IndexerName("Chars")]
-		extern virtual public char this[int index] {
+		extern virtual public char this[int index]
+		{
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			get;
 		}
 
 		#region Misc Methods
 
-		public static string Join(string separator, string[] value) {
+		public static string Join(string separator, string[] value)
+		{
 			return Join(separator, value, 0, value.Length);
 		}
 
-		public static string Join(string separator, string[] value, int startIndex, int count) {
+		public static string Join(string separator, string[] value, int startIndex, int count)
+		{
 			StringBuilder sb = new StringBuilder();
-			for (int i = startIndex; i < count; i++) {
+			for (int i = startIndex; i < count; i++)
+			{
 				sb.Append(value[i]);
 				sb.Append(separator);
 			}
 			return sb.ToString(0, sb.Length - separator.Length);
 		}
 
-		public string[] Split(params char[] separator) {
+		public string[] Split(params char[] separator)
+		{
 			return this.Split(separator, int.MaxValue);
 		}
 
-		public string[] Split(char[] separator, int count) {
-			if (count < 0) {
+		public string[] Split(char[] separator, int count)
+		{
+			if (count < 0)
+			{
 				throw new ArgumentException("count");
 			}
-			if (count == 0) {
+			if (count == 0)
+			{
 				return new string[0];
 			}
-			if (separator == null || separator.Length == 0) {
+			if (separator == null || separator.Length == 0)
+			{
 				separator = char.WhiteChars;
 			}
 
 			List<string> ret = new List<string>();
 
 			int pos = 0;
-			for (; count > 0; count--) {
+			for (; count > 0; count--)
+			{
 				int sepPos = this.IndexOfAny(separator, pos);
-				if (sepPos < 0) {
+				if (sepPos < 0)
+				{
 					ret.Add(new string(this, pos, this.length - pos));
 					break;
 				}
@@ -129,11 +145,13 @@ namespace System {
 			return ret.ToArray();
 		}
 
-		public bool StartsWith(string str) {
+		public bool StartsWith(string str)
+		{
 			return this.Substring(0, str.length) == str;
 		}
 
-		public bool EndsWith(string str) {
+		public bool EndsWith(string str)
+		{
 			return this.Substring(this.length - str.length, str.length) == str;
 		}
 
@@ -141,65 +159,82 @@ namespace System {
 
 		#region Concat Methods
 
-		public static string Concat(string str0, string str1) {
-			if (str0 == null) {
+		public static string Concat(string str0, string str1)
+		{
+			if (str0 == null)
+			{
 				return str1 ?? string.Empty;
 			}
-			if (str1 == null) {
+			if (str1 == null)
+			{
 				return str0;
 			}
 			return InternalConcat(str0, str1);
 		}
 
-		public static string Concat(string str0, string str1, string str2) {
+		public static string Concat(string str0, string str1, string str2)
+		{
 			return Concat(Concat(str0, str1), str2);
 		}
 
-		public static string Concat(string str0, string str1, string str2, string str3) {
+		public static string Concat(string str0, string str1, string str2, string str3)
+		{
 			return Concat(Concat(str0, str1), Concat(str2, str3));
 		}
 
-		public static string Concat(params string[] values) {
-			if (values == null) {
+		public static string Concat(params string[] values)
+		{
+			if (values == null)
+			{
 				throw new ArgumentNullException("args");
 			}
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < values.Length; i++) {
+			for (int i = 0; i < values.Length; i++)
+			{
 				sb.Append(values[i]);
 			}
 			return sb.ToString();
 		}
 
-		public static string Concat(object obj0) {
+		public static string Concat(object obj0)
+		{
 			return obj0.ToString();
 		}
 
-		public static string Concat(object obj0, object obj1) {
+		public static string Concat(object obj0, object obj1)
+		{
 			string str0 = (obj0 == null) ? null : obj0.ToString();
 			string str1 = (obj1 == null) ? null : obj1.ToString();
-			if (str0 == null) {
+			if (str0 == null)
+			{
 				return str1 ?? string.Empty;
 			}
-			if (str1 == null) {
+			if (str1 == null)
+			{
 				return str0;
 			}
 			return InternalConcat(str0, str1);
 		}
 
-		public static string Concat(object obj0, object obj1, object obj2) {
+		public static string Concat(object obj0, object obj1, object obj2)
+		{
 			return Concat(new object[] { obj0, obj1, obj2 });
 		}
 
-		public static string Concat(object obj0, object obj1, object obj2, object obj3) {
+		public static string Concat(object obj0, object obj1, object obj2, object obj3)
+		{
 			return Concat(new object[] { obj0, obj1, obj2, obj3 });
 		}
 
-		public static string Concat(params object[] objs) {
-			if (objs == null) {
+		public static string Concat(params object[] objs)
+		{
+			if (objs == null)
+			{
 				throw new ArgumentNullException("args");
 			}
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < objs.Length; i++) {
+			for (int i = 0; i < objs.Length; i++)
+			{
 				sb.Append(objs[i]);
 			}
 			return sb.ToString();
@@ -209,26 +244,33 @@ namespace System {
 
 		#region Trim Methods
 
-		public string Trim(params char[] trimChars) {
-			if (trimChars == null || trimChars.Length == 0) {
+		public string Trim(params char[] trimChars)
+		{
+			if (trimChars == null || trimChars.Length == 0)
+			{
 				trimChars = char.WhiteChars;
 			}
 			return InternalTrim(trimChars, 3);
 		}
 
-		public string Trim() {
+		public string Trim()
+		{
 			return InternalTrim(char.WhiteChars, 3);
 		}
 
-		public string TrimStart(params char[] trimChars) {
-			if (trimChars == null || trimChars.Length == 0) {
+		public string TrimStart(params char[] trimChars)
+		{
+			if (trimChars == null || trimChars.Length == 0)
+			{
 				trimChars = char.WhiteChars;
 			}
 			return InternalTrim(trimChars, 1);
 		}
 
-		public string TrimEnd(params char[] trimChars) {
-			if (trimChars == null || trimChars.Length == 0) {
+		public string TrimEnd(params char[] trimChars)
+		{
+			if (trimChars == null || trimChars.Length == 0)
+			{
 				trimChars = char.WhiteChars;
 			}
 			return InternalTrim(trimChars, 2);
@@ -238,16 +280,20 @@ namespace System {
 
 		#region Substring Methods
 
-		public string Substring(int startIndex) {
-			if (startIndex < 0 || startIndex > this.length) {
+		public string Substring(int startIndex)
+		{
+			if (startIndex < 0 || startIndex > this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
 
 			return new string(this, startIndex, this.length - startIndex);
 		}
 
-		public string Substring(int startIndex, int length) {
-			if (startIndex < 0 || length < 0 || startIndex + length > this.length) {
+		public string Substring(int startIndex, int length)
+		{
+			if (startIndex < 0 || length < 0 || startIndex + length > this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
 
@@ -258,23 +304,28 @@ namespace System {
 
 		#region Format Methods
 
-		public static string Format(string format, object obj0) {
+		public static string Format(string format, object obj0)
+		{
 			return Format(null, format, new object[] { obj0 });
 		}
 
-		public static string Format(string format, object obj0, object obj1) {
+		public static string Format(string format, object obj0, object obj1)
+		{
 			return Format(null, format, new object[] { obj0, obj1 });
 		}
 
-		public static string Format(string format, object obj0, object obj1, object obj2) {
+		public static string Format(string format, object obj0, object obj1, object obj2)
+		{
 			return Format(null, format, new object[] { obj0, obj1, obj2 });
 		}
 
-		public static string Format(string format, params object[] args) {
+		public static string Format(string format, params object[] args)
+		{
 			return Format(null, format, args);
 		}
 
-		public static string Format(IFormatProvider provider, string format, params object[] args) {
+		public static string Format(IFormatProvider provider, string format, params object[] args)
+		{
 			StringBuilder sb = new StringBuilder();
 			StringHelper.FormatHelper(sb, provider, format, args);
 			return sb.ToString();
@@ -284,80 +335,98 @@ namespace System {
 
 		#region Replace & Remove Methods
 
-		public string Replace(char oldChar, char newChar) {
+		public string Replace(char oldChar, char newChar)
+		{
 			StringBuilder sb = new StringBuilder(this);
 			return sb.Replace(oldChar, newChar).ToString();
 		}
 
-		public string Replace(string oldValue, string newValue) {
-			if (oldValue == null) {
+		public string Replace(string oldValue, string newValue)
+		{
+			if (oldValue == null)
+			{
 				throw new ArgumentNullException("oldValue");
 			}
-			if (oldValue.Length == 0) {
+			if (oldValue.Length == 0)
+			{
 				throw new ArgumentException("oldValue is an empty string.");
 			}
-			if (this.length == 0) {
+			if (this.length == 0)
+			{
 				return this;
 			}
-			if (newValue == null) {
+			if (newValue == null)
+			{
 				newValue = string.Empty;
 			}
 			return InternalReplace(oldValue, newValue);
 		}
 
-		public string Remove(int startIndex) {
-			if (startIndex < 0 || startIndex >= this.length) {
+		public string Remove(int startIndex)
+		{
+			if (startIndex < 0 || startIndex >= this.length)
+			{
 				throw new ArgumentOutOfRangeException("startIndex");
 			}
 			return new string(this, 0, startIndex);
 		}
 
-		public string Remove(int startIndex, int count) {
-			if (startIndex < 0 || count < 0 || startIndex + count >= this.length) {
+		public string Remove(int startIndex, int count)
+		{
+			if (startIndex < 0 || count < 0 || startIndex + count >= this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
-			int pos2 = startIndex+count;
+			int pos2 = startIndex + count;
 			return (new string(this, 0, startIndex)) + (new string(this, pos2, this.length - pos2));
 		}
 
-        public void CopyTo(
-            int sourceIndex,
-            char[] destination,
-            int destinationIndex,
-            int count
-        )
-        {
-            for (var i = 0; i < count; i++)
-            {
-                destination[destinationIndex + i] = this[sourceIndex + i];
-            }
-        }
+		public void CopyTo(
+			int sourceIndex,
+			char[] destination,
+			int destinationIndex,
+			int count
+		)
+		{
+			for (var i = 0; i < count; i++)
+			{
+				destination[destinationIndex + i] = this[sourceIndex + i];
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Compare and CompareOrdinal Methods
+		#region Compare and CompareOrdinal Methods
 
-        public static int Compare(string strA, string strB) {
+		public static int Compare(string strA, string strB)
+		{
 			return CompareOrdinal(strA, strB);
 		}
 
-		public static int Compare(string strA, int indexA, string strB, int indexB, int length) {
+		public static int Compare(string strA, int indexA, string strB, int indexB, int length)
+		{
 			return CompareOrdinal(strA.Substring(indexA, length), strB.Substring(indexB, length));
 		}
 
-		public static int CompareOrdinal(string strA, string strB) {
-			if (strA == null) {
-				if (strB == null) {
+		public static int CompareOrdinal(string strA, string strB)
+		{
+			if (strA == null)
+			{
+				if (strB == null)
+				{
 					return 0;
 				}
 				return -1;
 			}
-			if (strB == null) {
+			if (strB == null)
+			{
 				return 1;
 			}
 			int top = Math.Min(strA.Length, strB.Length);
-			for (int i = 0; i < top; i++) {
-				if (strA[i] != strB[i]) {
+			for (int i = 0; i < top; i++)
+			{
+				if (strA[i] != strB[i])
+				{
 					return (strA[i] - strB[i]);
 				}
 			}
@@ -368,37 +437,48 @@ namespace System {
 
 		#region IndexOf... Methods
 
-		public int IndexOf(string value) {
+		public int IndexOf(string value)
+		{
 			return IndexOf(value, 0, this.length);
 		}
 
-		public int IndexOf(string value, int startIndex) {
+		public int IndexOf(string value, int startIndex)
+		{
 			return IndexOf(value, startIndex, this.length - startIndex);
 		}
 
-		public int IndexOf(string value, int startIndex, int count) {
-			if (value == null) {
+		public int IndexOf(string value, int startIndex, int count)
+		{
+			if (value == null)
+			{
 				throw new ArgumentNullException("value");
 			}
-			if (startIndex < 0 || count < 0 || startIndex + count > this.length) {
+			if (startIndex < 0 || count < 0 || startIndex + count > this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
-			if (value.length == 0) {
+			if (value.length == 0)
+			{
 				return startIndex;
 			}
 			int valueLen = value.length;
 			int finalIndex = startIndex + count - valueLen + 1;
 			char char0 = value[0];
-			for (int i = startIndex; i < finalIndex; i++) {
-				if (this[i] == char0) {
+			for (int i = startIndex; i < finalIndex; i++)
+			{
+				if (this[i] == char0)
+				{
 					bool ok = true;
-					for (int j = 1; j < valueLen; j++) {
-						if (this[i + j] != value[j]) {
+					for (int j = 1; j < valueLen; j++)
+					{
+						if (this[i + j] != value[j])
+						{
 							ok = false;
 							break;
 						}
 					}
-					if (ok) {
+					if (ok)
+					{
 						return i;
 					}
 				}
@@ -406,63 +486,79 @@ namespace System {
 			return -1;
 		}
 
-		public int IndexOf(char value) {
+		public int IndexOf(char value)
+		{
 			return this.IndexOf(value, 0, this.length, true);
 		}
 
-		public int IndexOf(char value, int startIndex) {
+		public int IndexOf(char value, int startIndex)
+		{
 			return this.IndexOf(value, startIndex, this.length - startIndex, true);
 		}
 
-		public int IndexOf(char value, int startIndex, int count) {
+		public int IndexOf(char value, int startIndex, int count)
+		{
 			return this.IndexOf(value, startIndex, count, true);
 		}
 
-		public int LastIndexOf(char value) {
+		public int LastIndexOf(char value)
+		{
 			return this.IndexOf(value, 0, this.length, false);
 		}
 
-		public int LastIndexOf(char value, int startIndex) {
+		public int LastIndexOf(char value, int startIndex)
+		{
 			return this.IndexOf(value, startIndex, this.length - startIndex, false);
 		}
 
-		public int LastIndexOf(char value, int startIndex, int count) {
+		public int LastIndexOf(char value, int startIndex, int count)
+		{
 			return this.IndexOf(value, startIndex, count, false);
 		}
 
-		private int IndexOf(char value, int startIndex, int count, bool forwards) {
-			if (startIndex < 0 || count < 0 || startIndex + count > this.length) {
+		private int IndexOf(char value, int startIndex, int count, bool forwards)
+		{
+			if (startIndex < 0 || count < 0 || startIndex + count > this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
 			return this.InternalIndexOf(value, startIndex, count, forwards);
 		}
 
-		public int IndexOfAny(char[] anyOf) {
+		public int IndexOfAny(char[] anyOf)
+		{
 			return this.IndexOfAny(anyOf, 0, this.length, true);
 		}
 
-		public int IndexOfAny(char[] anyOf, int startIndex) {
+		public int IndexOfAny(char[] anyOf, int startIndex)
+		{
 			return this.IndexOfAny(anyOf, startIndex, this.length - startIndex, true);
 		}
 
-		public int IndexOfAny(char[] anyOf, int startIndex, int count) {
+		public int IndexOfAny(char[] anyOf, int startIndex, int count)
+		{
 			return this.IndexOfAny(anyOf, startIndex, count, true);
 		}
 
-		public int LastIndexOfAny(char[] anyOf) {
+		public int LastIndexOfAny(char[] anyOf)
+		{
 			return this.IndexOfAny(anyOf, 0, this.length, false);
 		}
 
-		public int LastIndexOfAny(char[] anyOf, int startIndex) {
+		public int LastIndexOfAny(char[] anyOf, int startIndex)
+		{
 			return this.IndexOfAny(anyOf, startIndex, this.length - startIndex, false);
 		}
 
-		public int LastIndexOfAny(char[] anyOf, int startIndex, int count) {
+		public int LastIndexOfAny(char[] anyOf, int startIndex, int count)
+		{
 			return this.IndexOfAny(anyOf, startIndex, count, false);
 		}
 
-		private int IndexOfAny(char[] anyOf, int startIndex, int count, bool forward) {
-			if (startIndex < 0 || count < 0 || startIndex + count > this.length) {
+		private int IndexOfAny(char[] anyOf, int startIndex, int count, bool forward)
+		{
+			if (startIndex < 0 || count < 0 || startIndex + count > this.length)
+			{
 				throw new ArgumentOutOfRangeException();
 			}
 			/*int anyOfLen = anyOf.Length;
@@ -484,47 +580,59 @@ namespace System {
 
 		#region Case methods
 
-		public string ToLower() {
+		public string ToLower()
+		{
 			return ToLower(CultureInfo.CurrentCulture);
 		}
 
-		public string ToLower(CultureInfo culture) {
-			if (culture == null) {
+		public string ToLower(CultureInfo culture)
+		{
+			if (culture == null)
+			{
 				throw new ArgumentNullException("culture");
 			}
-			if (culture.LCID == 0x007f) {
+			if (culture.LCID == 0x007f)
+			{
 				return ToLowerInvariant();
 			}
 			return culture.TextInfo.ToLower(this);
 		}
 
-		public string ToLowerInvariant() {
+		public string ToLowerInvariant()
+		{
 			int len = this.length;
 			StringBuilder sb = new StringBuilder(len);
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < len; i++)
+			{
 				sb.Append(char.ToLowerInvariant(this[i]));
 			}
 			return sb.ToString();
 		}
 
-		public string ToUpper() {
+		public string ToUpper()
+		{
 			return ToLower(CultureInfo.CurrentCulture);
 		}
 
-		public string ToUpper(CultureInfo culture) {
-			if (culture == null) {
+		public string ToUpper(CultureInfo culture)
+		{
+			if (culture == null)
+			{
 				throw new ArgumentNullException("culture");
 			}
-			if (culture.LCID == 0x007f) {
+			if (culture.LCID == 0x007f)
+			{
 				return ToUpperInvariant();
 			}
 			return culture.TextInfo.ToUpper(this);
 		}
 
-		public string ToUpperInvariant() {
+		public string ToUpperInvariant()
+		{
 			int len = this.length;
 			StringBuilder sb = new StringBuilder(len);
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < len; i++)
+			{
 				sb.Append(char.ToUpperInvariant(this[i]));
 			}
 			return sb.ToString();
@@ -534,19 +642,23 @@ namespace System {
 
 		#region Overrides and Operators
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			return this;
 		}
 
-		public override bool Equals(object obj) {
+		public override bool Equals(object obj)
+		{
 			return Equals(this, obj as string);
 		}
 
-		public static bool operator ==(string a, string b) {
+		public static bool operator ==(string a, string b)
+		{
 			return Equals(a, b);
 		}
 
-		public static bool operator !=(string a, string b) {
+		public static bool operator !=(string a, string b)
+		{
 			return !Equals(a, b);
 		}
 
@@ -560,7 +672,8 @@ namespace System {
 
 		#region IClonable Members
 
-		public object Clone() {
+		public object Clone()
+		{
 			return this;
 		}
 
@@ -568,17 +681,21 @@ namespace System {
 
 		#region IComparable Members
 
-		public int CompareTo(object value) {
-			if (value == null) {
+		public int CompareTo(object value)
+		{
+			if (value == null)
+			{
 				return 1;
 			}
-			if (!(value is string)) {
+			if (!(value is string))
+			{
 				throw new ArgumentException();
 			}
 			return string.Compare(this, (string)value);
 		}
 
-		public int CompareTo(string value) {
+		public int CompareTo(string value)
+		{
 			if (value == null)
 				return 1;
 
@@ -589,7 +706,8 @@ namespace System {
 
 		#region IEquatable<string> Members
 
-		public bool Equals(string other) {
+		public bool Equals(string other)
+		{
 			return Equals(this, other);
 		}
 
@@ -597,11 +715,13 @@ namespace System {
 
 		#region IEnumerable Members
 
-		public IEnumerator GetEnumerator() {
+		public IEnumerator GetEnumerator()
+		{
 			return new CharEnumerator(this);
 		}
 
-		IEnumerator<char> IEnumerable<char>.GetEnumerator() {
+		IEnumerator<char> IEnumerable<char>.GetEnumerator()
+		{
 			return new CharEnumerator(this);
 		}
 
