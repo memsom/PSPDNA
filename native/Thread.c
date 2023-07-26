@@ -280,7 +280,10 @@ I32 Thread_Execute() {
 			}
 		}
 	}
-
+    
+#if defined(__APPLE__)
+    return 0;
+#endif
 }
 
 tThread* Thread_GetCurrent() {

@@ -233,7 +233,7 @@ static U32 GenCombined(tOps *pOps, tOps *pIsDynamic, U32 startOfs, U32 count, U3
 }
 #endif
 
-static SetBreakPoint(tMD_MethodDef *pMethodDef, U32 cilOfs, tOps ops)
+static void SetBreakPoint(tMD_MethodDef *pMethodDef, U32 cilOfs, tOps ops)
 {
     
 }
