@@ -10,16 +10,31 @@
 
 #include "Psp.BasicGraphics.h"
 
+
+
 #if defined(__PSP__)
 #include <pspdebug.h>
 #endif
 
+// don't assume ttf is present
+#if defined(__PSP__) || defined(__APPLE__)
+#define USE_TTF
+#endif
+
 #include <SDL2/SDL.h>
+
+#if defined(USE_TTF)
 #include <SDL2/SDL_ttf.h>
+#endif
+
+
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer;
+
+#if defined(USE_TTF)
 TTF_Font *defaultFont = NULL; // for now we just use the default font
+#endif
 
 tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
@@ -47,10 +62,12 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
         return -1;
     }
 
+#if defined(USE_TTF)
     if (TTF_Init() == 0)
     {
         defaultFont = TTF_OpenFont("Fonts/arial.ttf", 12);
     }
+#endif
 
     return NULL;
 }
@@ -98,6 +115,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawRect2(PTR pThis_, PTR pParams, PTR pRetu
 
 tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
+#if defined(USE_TTF)
     // only call this if we loaded the font correctly
     if (defaultFont)
     {
@@ -137,6 +155,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawText2(PTR pThis_, PTR pParams, PTR pRetu
         SDL_DestroyTexture(msgtex);
         SDL_FreeSurface(msgsurf);
     }
+#endif
     return NULL;
 }
 
@@ -176,7 +195,7 @@ tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR 
     // read the param - this will be a path
     HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
 
-    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(renderer, (SDL_Surface*)pSurface);
 
     //Crash("%i\n%i", pSurface, pTexture);
 
@@ -192,7 +211,7 @@ tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pR
     int flag = ((int *)pParams)[1];
     U32 key = ((U32 *)pParams)[2];
 
-    int result = SDL_SetColorKey(pSurface, flag, key);
+    int result = SDL_SetColorKey((SDL_Surface*)pSurface, flag, key);
 
     *(int *)pReturnValue = (int *)result;
 
@@ -207,7 +226,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pR
     int w = ((int *)pParams)[3];
     int h = ((int *)pParams)[4];
 
-    int result = SDL_RenderCopy(renderer, pTexture, NULL,&(SDL_Rect){x, y, w, h});
+    int result = SDL_RenderCopy(renderer, (SDL_Texture*)pTexture, NULL,&(SDL_Rect){x, y, w, h});
 
     *(int *)pReturnValue = (int *)result;
 
