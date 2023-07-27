@@ -47,7 +47,6 @@ res:
 
 dna: $(OBJS)
 	$(CC) -o $(BUILD_DIR)/$@ $^ $(CFLAGS) $(LIBS)
-	cp -R dna $(BUILD_DIR) 
 
 .PHONY: clean
 
