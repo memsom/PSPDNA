@@ -34,8 +34,18 @@ void initGraf()
 		exit(1);
 	}
 
+	// if we don;t do this, the window is stuck int he corner of the screen on non PSP hardware
+	// if we don;t do this, the window is stuck int he corner of the screen on non PSP hardware
+#if defined(__PSP__)
+	U32 style = 0;
+	int x = 0, y = 0;
+#else
+	U32 style = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+	int x = 50, y = 50;
+#endif
+
 	// create an SDL  (pspgl enabled)
-	graph_window = SDL_CreateWindow("sdl2_psp", 0, 0, 480, 272, 0);
+	graph_window = SDL_CreateWindow("sdl2_psp", x, y, 480, 272, style);
 	if (!graph_window)
 	{
 		SDL_Log("SDL_CreateWindow: %s\n", SDL_GetError());
