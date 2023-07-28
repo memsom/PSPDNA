@@ -244,17 +244,17 @@ namespace Rockbound2
             */
             #endregion
 
-            Debug.Log("Run");
+            Psp.Debug.WriteLine("Run");
 
             BasicGraphics.Init();
 
-            Debug.Log("Initialised");
+            Psp.Debug.WriteLine("Initialised");
 
             bool isButtonHeld = false;
 
             while (true)
             {
-                Debug.Log("loop");
+                Psp.Debug.WriteLine("loop");
                 if (onMenu)
                 {
                     DrawMenu();
@@ -264,7 +264,7 @@ namespace Rockbound2
 
         void DrawMenu()
         {
-            Debug.Log("DrawMenu");
+            Psp.Debug.WriteLine("DrawMenu");
 
             BasicGraphics.Clear(Color.Black);
 

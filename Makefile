@@ -57,7 +57,7 @@ include pspbuild.mak
 
 all: managed native
 
-managed: appmenu simple tet flappy
+managed: appmenu simple tet flappy rockbound2
 
 corelib: fonts res
 	${DOTNET} ${DOTNETFLAGS} corlib/corlib.csproj
@@ -95,6 +95,9 @@ flappyapp: corelib
 flappyres:
 	cp -R flappy/res $(BUILD_DIR)
 
+rockbound2: corelib
+	${CSC} ${CSCFLAGS} -reference:${CSCLIBS} -out:$(BUILD_DIR)/apps/rockbound2.exe rockbound2/Program.cs rockbound2/ImageResources.cs
+
 rockbound2app: corelib
 	${CSC} ${CSCFLAGS} -reference:${CSCLIBS} -out:$(BUILD_DIR)/Dna.AppMenu.exe rockbound2/Program.cs rockbound2/ImageResources.cs
 
@@ -120,6 +123,12 @@ cleandna:
 	rm -rf ./tet/obj
 	rm -rf ./testSimple/obj
 	rm -rf ./flappy/obj
+	rm -rf ./rockbound2/obj
+	rm -rf ./appmenu/*.exe
+	rm -rf ./tet/*.exe
+	rm -rf ./testSimple/*.exe
+	rm -rf ./flappy/*.exe
+	rm -rf ./rockbound2/*.exe
 	rm -rf EBOOT.PBP 
 	rm -rf PARAM.SFO 
 	rm -rf dna.elf 

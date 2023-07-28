@@ -32,15 +32,15 @@ all: setup dna
 setup: fonts res 
 	cp -R $(PSPBUILD_DIR)/*.dll $(BUILD_DIR)
 	cp -R $(PSPBUILD_DIR)/*.exe $(BUILD_DIR)
-	cp -R $(PSPBUILD_DIR)/apps $(BUILD_DIR)/apps
+	cp -R $(PSPBUILD_DIR)/apps $(BUILD_DIR)/
 
 fonts:
 	cp -R ../native/fonts $(BUILD_DIR)/fonts
 
 res:
-	cp -R ../flappy/res $(BUILD_DIR)/res
-	cp -R ../testSimple/res $(BUILD_DIR)/res
-	cp -R ../testSimple/res $(BUILD_DIR)/res
+	cp -R ../flappy/res $(BUILD_DIR)/
+	cp -R ../testSimple/res $(BUILD_DIR)/
+	cp -R ../rockbound2/res $(BUILD_DIR)/
 
 %.o: %.c 
 	$(CC) -c -o $@ $< $(CFLAGS) 
