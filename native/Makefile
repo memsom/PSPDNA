@@ -25,22 +25,31 @@ CC = gcc
 DEPS =
 
 BUILD_DIR = ../host
+APPS_DIR = $(BUILD_DIR)/apps
+RES_DIR = $(BUILD_DIR)/res
+FONTS_DIR = $(BUILD_DIR)/fonts
 PSPBUILD_DIR = ../build
 
 all: setup dna
 
-setup: fonts res 
+setup: managed exe resources
+
+managed: 
+	mkdir -p $(BUILD_DIR)/
 	cp -R $(PSPBUILD_DIR)/*.dll $(BUILD_DIR)
 	cp -R $(PSPBUILD_DIR)/*.exe $(BUILD_DIR)
-	cp -R $(PSPBUILD_DIR)/apps $(BUILD_DIR)/
 
-fonts:
-	cp -R ../native/fonts $(BUILD_DIR)/fonts
+exe:
+	mkdir -p $(APPS_DIR)/
+	cp -R $(PSPBUILD_DIR)/apps/*.exe $(APPS_DIR)/ 
 
-res:
-	cp -R ../flappy/res $(BUILD_DIR)/
-	cp -R ../testSimple/res $(BUILD_DIR)/
-	cp -R ../rockbound2/res $(BUILD_DIR)/
+resources: 
+	mkdir -p $(RES_DIR)/
+	cp -R ../flappy/res/*.* $(RES_DIR)
+	cp -R ../testSimple/res $(RES_DIR)
+	cp -R ../rockbound2/res $(RES_DIR)
+	mkdir -p $(FONTS_DIR)/
+	cp -R ../native/fonts/*.* $(FONTS_DIR)/
 
 %.o: %.c 
 	$(CC) -c -o $@ $< $(CFLAGS) 
