@@ -281,7 +281,7 @@ I32 Thread_Execute() {
 		}
 	}
     
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(_WIN32)
     return 0;
 #endif
 }

@@ -15,6 +15,8 @@
 
 #endif
 
+#define SUB_LEN (U32)129
+
 // this is basically the same as System_Console_Write(..)
 tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
@@ -22,7 +24,6 @@ tAsyncCall *Psp_Debug_nativeScreenPrintf(PTR pThis_, PTR pParams, PTR pReturnVal
 	STRING2 str;
 	U32 i, strLen;
 
-	I32 SUB_LEN = 129;
 	string = *(HEAP_PTR *)pParams;
 	unsigned char str8[SUB_LEN];
 	str = SystemString_GetString(string, &strLen);
@@ -52,7 +53,6 @@ tAsyncCall *Psp_Debug_nativeWrite(PTR pThis_, PTR pParams, PTR pReturnValue)
 	STRING2 str;
 	U32 i, strLen;
 
-	I32 SUB_LEN = 129;
 	string = *(HEAP_PTR *)pParams;
 	unsigned char str8[SUB_LEN];
 	str = SystemString_GetString(string, &strLen);
@@ -70,6 +70,8 @@ tAsyncCall *Psp_Debug_nativeWrite(PTR pThis_, PTR pParams, PTR pReturnValue)
 	return NULL;
 }
 
+#define SUB_LEN_2 (U32)2
+
 tAsyncCall *Psp_Debug_nativeScreenPrintfXY(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
 
@@ -83,12 +85,11 @@ tAsyncCall *Psp_Debug_nativeScreenPrintfXY(PTR pThis_, PTR pParams, PTR pReturnV
 	U32 i, strLen;
 
 	PTR pParamsx = pParams += (sizeof(I32) * 2);
-	I32 SUB_LEN = 2;
 	string = *(HEAP_PTR *)pParamsx;
-	unsigned char str8[SUB_LEN];
+	unsigned char str8[SUB_LEN_2];
 	str = SystemString_GetString(string, &strLen);
 	U32 start = 0;
-	U32 thisLen = (strLen > SUB_LEN) ? SUB_LEN : strLen;
+	U32 thisLen = (strLen > SUB_LEN_2) ? SUB_LEN_2 : strLen;
 	for (i = 0; i < thisLen; i++)
 	{
 		unsigned char c = str[start + i] & 0xff;

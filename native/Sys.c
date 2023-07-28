@@ -46,6 +46,7 @@
 
 void printline(char *buff, int size, int linesize)
 {
+#if defined(__PSP__)
 	int hedge = size % linesize;
 	int newsize = size + hedge;
 	int pointer = 0;
@@ -62,9 +63,9 @@ void printline(char *buff, int size, int linesize)
 			buffer[i] = buff[pointer++];
 		}
 	}
+#endif
 
-	printf(buffer);
-	printf("\n");
+	printf("%s\n", buff);
 }
 
 void Crash(char *pMsg, ...)
@@ -77,22 +78,18 @@ void Crash(char *pMsg, ...)
 
 	va_start(va, pMsg);
 
-	//vprintf(pMsg, va);
-	vsnprintf(&buff, 255, pMsg, va);
-
-	va_end(va);
+#if defined(__PSP__) || (__APPLE__)
+	vsnprintf((char const*)&buff, 255, (const char*)pMsg, va);
 
 	int i = strlen(buff);
 	printline(buff, i, 60);
+#else
+	vprintf(pMsg, va);
+#endif
+
+	va_end(va);
 
 	printf("\n\n");
-
-#ifdef _WIN32
-	{
-		// Cause a deliberate exception, to get into debugger
-		__debugbreak();
-	}
-#endif
 
 	exit(1);
 }

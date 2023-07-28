@@ -41,16 +41,26 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         SDL_Log("SDL_Init: %s\n", SDL_GetError());
-        return -1;
+        return NULL;
     }
 
+    // if we don;t do this, the window is stuck int he corner of the screen on non PSP hardware
+#if defined(__PSP__)
+    U32 style = 0;
+    int x = 0, y = 0;
+#else
+    U32 style = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+    int x = SDL_WINDOWPOS_UNDEFINED, y = SDL_WINDOWPOS_UNDEFINED;
+#endif
+
+
     // create an SDL window (pspgl enabled)
-    window = SDL_CreateWindow("sdl2_psp", 0, 0, 480, 272, 0);
+    window = SDL_CreateWindow("sdl2_psp", x, y, 480, 272, style);
     if (!window)
     {
         SDL_Log("SDL_CreateWindow: %s\n", SDL_GetError());
         SDL_Quit();
-        return -1;
+        return NULL;
     }
 
     // create a renderer (OpenGL ES2)
@@ -59,7 +69,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
         SDL_Quit();
-        return -1;
+        return NULL;
     }
 
 #if defined(USE_TTF)
@@ -171,16 +181,31 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
 
     U32 i, strLen;
     str = SystemString_GetString(pStr, &strLen);
+
+#if defined(_WIN32)
+    char str8[255];
+    if (strLen > 255)
+    {
+        strLen = 255;
+    }
+#else
     char str8[strLen + 1];
+#endif
+
     U32 start = 0;
     for (i = 0; i < strLen; i++)
     {
         unsigned char c = str[start + i] & 0xff;
+
+#if defined(_WIN32)
+        if (c == '/') c = '\\';
+#endif
+
         str8[i] = c ? c : '?';
     }
     str8[i] = 0;
 
-    // we can nor load the value
+    // we can now load the value
     SDL_Surface *surface = SDL_LoadBMP(str8);
 
     last = surface;
@@ -207,13 +232,15 @@ tAsyncCall *Psp_BasicGraphics_nativeCreateTexture2(PTR pThis_, PTR pParams, PTR 
 tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pReturnValue)
 {
     // read the param - this will be a path
-    HEAP_PTR pSurface = ((HEAP_PTR *)pParams)[0];
+    HEAP_PTR pSurface = ((HEAP_PTR*)pParams)[0];
     int flag = ((int *)pParams)[1];
     U32 key = ((U32 *)pParams)[2];
 
-    int result = SDL_SetColorKey((SDL_Surface*)pSurface, flag, key);
+    SDL_Surface* surface = (SDL_Surface*)pSurface;
 
-    *(int *)pReturnValue = (int *)result;
+    int result = SDL_SetColorKey(surface, flag, key);
+
+    pReturnValue = (PTR)(int *)result;
 
     return NULL;
 }
@@ -228,7 +255,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pR
 
     int result = SDL_RenderCopy(renderer, (SDL_Texture*)pTexture, NULL,&(SDL_Rect){x, y, w, h});
 
-    *(int *)pReturnValue = (int *)result;
+    pReturnValue = (PTR)(int*)result;
 
     return NULL;
 }

@@ -370,3 +370,11 @@ host/
 native/log.txt
 native/dna
 xcode/
+native/res/test.bmp
+native/res/pillar.bmp
+native/res/bird-3.bmp
+native/res/bird-2.bmp
+native/res/bird-1.bmp
+native/res/bird-0.bmp
+native/res/background.pxm
+native/res/background.bmp

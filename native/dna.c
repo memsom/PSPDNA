@@ -30,6 +30,7 @@
 #include "callback.h"
 #include "controls.h"
 #include "Psp.Controls.h"
+#include <stdint.h>
 
 #if defined(__PSP__)
 #define VERS 1
@@ -76,12 +77,16 @@ int run(char *name)
 	args[0] = NULL;
 	args[1] = name;
 
-	return dna_main(2, &args);
+	return dna_main(2, (char**) & args);
 }
 
 extern char *pAppName;
 const char APP_MENU[] = "Dna.AppMenu.exe";
 const char APP_LEGACY[] = "app.exe";
+
+#ifndef F_OK
+#define F_OK 0
+#endif
 
 int main(int argc, char *argv[])
 {
