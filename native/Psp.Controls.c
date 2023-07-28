@@ -96,7 +96,16 @@ tAsyncCall *Psp_State_setAppName(PTR pThis_, PTR pParams, PTR pReturnValue)
     STRING2 str;
     U32 i, strLen;
     str = SystemString_GetString(pStr, &strLen);
+
+#if defined(_WIN32)
+    char str8[255];
+    if (strLen > 255)
+    {
+        strLen = 255;
+    }
+#else
     char str8[strLen + 1];
+#endif
     U32 start = 0;
     for (i = 0; i < strLen; i++)
     {
@@ -107,7 +116,7 @@ tAsyncCall *Psp_State_setAppName(PTR pThis_, PTR pParams, PTR pReturnValue)
 
     // copy the data to the internal holder
     pAppName = malloc(strLen + 1);
-    strncpy(pAppName, &str8, strLen + 1);
+    strncpy(pAppName, (const char*) &str8, strLen + 1);
 
     return NULL;
 }

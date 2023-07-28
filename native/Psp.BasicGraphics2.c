@@ -41,7 +41,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         SDL_Log("SDL_Init: %s\n", SDL_GetError());
-        return -1;
+        return NULL;
     }
 
     // create an SDL window (pspgl enabled)
@@ -50,7 +50,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     {
         SDL_Log("SDL_CreateWindow: %s\n", SDL_GetError());
         SDL_Quit();
-        return -1;
+        return NULL;
     }
 
     // create a renderer (OpenGL ES2)
@@ -59,7 +59,7 @@ tAsyncCall *Psp_BasicGraphics_nativeInit2(PTR pThis_, PTR pParams, PTR pReturnVa
     {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
         SDL_Quit();
-        return -1;
+        return NULL;
     }
 
 #if defined(USE_TTF)
@@ -171,7 +171,17 @@ tAsyncCall *Psp_BasicGraphics_nativeLoadSurface2(PTR pThis_, PTR pParams, PTR pR
 
     U32 i, strLen;
     str = SystemString_GetString(pStr, &strLen);
+
+#if defined(_WIN32)
+    char str8[255];
+    if (strLen > 255)
+    {
+        strLen = 255;
+    }
+#else
     char str8[strLen + 1];
+#endif
+
     U32 start = 0;
     for (i = 0; i < strLen; i++)
     {
@@ -213,7 +223,7 @@ tAsyncCall *Psp_BasicGraphics_nativeSetColorKey2(PTR pThis_, PTR pParams, PTR pR
 
     int result = SDL_SetColorKey((SDL_Surface*)pSurface, flag, key);
 
-    *(int *)pReturnValue = (int *)result;
+    *(int *)pReturnValue = *(int *)result;
 
     return NULL;
 }
@@ -228,7 +238,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawTexture2(PTR pThis_, PTR pParams, PTR pR
 
     int result = SDL_RenderCopy(renderer, (SDL_Texture*)pTexture, NULL,&(SDL_Rect){x, y, w, h});
 
-    *(int *)pReturnValue = (int *)result;
+    *(int *)pReturnValue = *(int *)result;
 
     return NULL;
 }

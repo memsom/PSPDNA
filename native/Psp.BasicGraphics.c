@@ -58,7 +58,7 @@ tAsyncCall *Psp_BasicGraphics_nativeDrawImage(PTR pThis_, PTR pParams, PTR pRetu
     int w = INTERNALCALL_PARAM(size * 2, I32);
     int h = INTERNALCALL_PARAM(size * 3, I32);
     HEAP_PTR* p = INTERNALCALL_PARAM(size * 4, HEAP_PTR*);
-    PTR pFirstElement = SystemArray_LoadElementAddress(p, 0);
+    PTR pFirstElement = SystemArray_LoadElementAddress(*p, 0);
     
     uint32_t* dst = (uint32_t*)pFirstElement;
 
