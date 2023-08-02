@@ -46,8 +46,8 @@ exe:
 resources: 
 	mkdir -p $(RES_DIR)/
 	cp -R ../flappy/res/*.* $(RES_DIR)
-	cp -R ../testSimple/res $(RES_DIR)
-	cp -R ../rockbound2/res $(RES_DIR)
+	cp -R ../testSimple/res/*.* $(RES_DIR)
+	cp -R ../rockbound2/res/*.* $(RES_DIR)
 	mkdir -p $(FONTS_DIR)/
 	cp -R ../native/fonts/*.* $(FONTS_DIR)/
 
